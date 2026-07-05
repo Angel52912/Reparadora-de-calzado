@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicio Registrado · Talabartería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+const id = Number(getParam('id'));
+renderHeader({ title:'Servicio', backHref:'../registro-servicios/index.html', homeHref:'../index.html' });
+
+const s = state.services.find(x=>x.id===id);
+document.getElementById('app').innerHTML = `
+  <div class="card p-8 mt-8 text-center space-y-3 fade-in">
+    <div class="w-20 h-20 mx-auto bg-[#8C261F]/10 rounded-full flex items-center justify-center">
+      <span class="material-symbols-outlined fill text-[44px] text-[#8C261F]">check_circle</span>
+    </div>
+    <h2 class="text-lg font-bold">Servicio registrado</h2>
+    <p class="text-[#57423f]">La orden de ${esc(s ? s.customer : '')} se guardó correctamente.</p>
+    <div class="flex flex-col gap-2 pt-3">
+      <a href="../detalle-servicio/index.html?id=${id}" class="btn-primary tap w-full py-3 block">Ver detalle</a>
+      <a href="../registro-servicios/index.html" class="btn-ghost tap w-full py-3 block">Volver a servicios</a>
+    </div>
+  </div>
+`;
+</script>
+</body>
+</html>

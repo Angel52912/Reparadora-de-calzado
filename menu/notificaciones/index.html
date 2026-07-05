@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajustes de Notificaciones · Heritage Service Utility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Ajustes de Notificaciones', backHref: document.referrer ? 'javascript:history.back()' : '../index.html' });
+
+const items = [
+  { key:'ventas', icon:'point_of_sale', label:'Ventas', desc:'Recibe un aviso cada vez que se registra una venta.' },
+  { key:'servicios', icon:'construction', label:'Servicios', desc:'Recibe un aviso cuando una orden cambia de estado.' },
+  { key:'recordatorios', icon:'schedule', label:'Recordatorios de entrega', desc:'Avisa un día antes de la fecha de entrega prometida.' },
+  { key:'promos', icon:'sell', label:'Promociones', desc:'Novedades y promociones del sistema.' },
+];
+
+function toggleSetting(key){
+  const s = state.settings;
+  s[key] = !s[key];
+  state.settings = s;
+  paint();
+}
+
+function paint(){
+  document.getElementById('app').innerHTML = `
+    <div class="fade-in space-y-3 mt-4">
+      ${items.map(it => `
+        <div class="card p-4 flex items-center gap-4">
+          <div class="w-11 h-11 rounded-full bg-[#ffe9e6] flex items-center justify-center text-[#8c261f] flex-shrink-0">
+            <span class="material-symbols-outlined">${it.icon}</span>
+          </div>
+          <div class="flex-grow">
+            <p class="font-semibold">${it.label}</p>
+            <p class="text-xs text-[#57423f]">${it.desc}</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" ${state.settings[it.key] ? 'checked' : ''} onchange="toggleSetting('${it.key}')">
+            <span class="track"></span>
+          </label>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+paint();
+</script>
+</body>
+</html>

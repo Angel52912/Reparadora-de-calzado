@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda de Abarrotes · Heritage Service Utility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../shared/js/datos.js"></script>
+<script src="../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Abarrotes', backHref:'../menu/index.html', settingsHref:'../menu/notificaciones/index.html', extraHref:'historial-permanente/index.html', extraIcon:'inventory_2', extraTitle:'Historial de Tienda de Abarrotes' });
+
+const todayStr = new Date().toDateString();
+const todayCount = state.sales.filter(s=>new Date(s.createdAt).toDateString()===todayStr).length;
+
+document.getElementById('app').innerHTML = `
+  <div class="fade-in">
+    <section class="text-center md:text-left mt-8 mb-8">
+      <h2 class="text-[26px] font-bold text-[#241917] mb-1">¡Hola de nuevo!</h2>
+      <p class="text-[#57423f]">¿Qué vamos a hacer hoy en el negocio?</p>
+    </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <a href="catalogo/index.html" class="tap p-6 rounded-xl bg-[#8c261f] text-white flex flex-col items-center text-center gap-3 border-b-4 border-[#6c0d0b] shadow">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="material-symbols-outlined fill text-[36px]">shopping_cart</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-1">Nueva venta</h3>
+          <p class="text-xs opacity-90">Registra productos ahora</p>
+        </div>
+      </a>
+      <a href="historial-ventas/index.html" class="tap p-6 rounded-xl bg-[#D4A373] text-[#2B2B2B] flex flex-col items-center text-center gap-3 border-b-4 border-[#c99562] shadow">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="material-symbols-outlined text-[36px]">receipt_long</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-1">Registros de ventas</h3>
+          <p class="text-xs opacity-90">Consulta el historial</p>
+        </div>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-[#D4A373]/30">
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-[#8C261F]">${todayCount}</p>
+        <p class="text-xs text-[#57423f] uppercase tracking-wide">Ventas hoy</p>
+      </div>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-[#7d562d]">${state.products.length}</p>
+        <p class="text-xs text-[#57423f] uppercase tracking-wide">Productos</p>
+      </div>
+    </div>
+  </div>
+`;
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+/* ==========================================================
+   ESTILOS GLOBALES · Heritage Service Utility
+   Usados por: Menú, Talabartería y Tienda de Abarrotes
+   ========================================================== */
+:root{
+  --primary:#8C261F;
+  --primary-dark:#6c0d0b;
+  --secondary:#D4A373;
+  --bg:#FEF9F0;
+  --ink:#2B2B2B;
+  --ink-soft:#57423f;
+  --border:#D4A373;
+  --success:#2e7d32;
+  --error:#ba1a1a;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Work Sans',sans-serif;
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.material-symbols-outlined{
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  vertical-align:middle;
+}
+.fill{ font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24; }
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-thumb{ background:#8b716e55; border-radius:10px; }
+.tap:active{ transform:scale(0.97); }
+.card{
+  background:#fff;
+  border:1px solid #D4A37333;
+  border-radius:0.75rem;
+  box-shadow:0 4px 12px rgba(43,43,43,0.06);
+}
+.btn-primary{
+  background:var(--primary); color:#fff; border-radius:9999px;
+  font-weight:600; transition:filter .15s, transform .1s;
+}
+.btn-primary:hover{ filter:brightness(1.08); }
+.btn-secondary{
+  background:var(--secondary); color:var(--ink); border-radius:9999px; font-weight:600;
+}
+.btn-ghost{
+  background:transparent; border:1px solid #2B2B2B33; color:var(--ink-soft); border-radius:9999px; font-weight:600;
+}
+input[type=text], input[type=number], input[type=date], select, textarea{
+  width:100%; background:#fff; border:1px solid #2B2B2B; border-radius:0.5rem;
+  padding:12px 14px; font-family:'Work Sans'; font-size:16px; color:var(--ink);
+}
+input:focus, select:focus, textarea:focus{
+  outline:none; border-color:var(--primary); border-width:2px; padding:11px 13px;
+}
+label{ font-size:14px; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:6px; }
+.badge{ font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:4px 10px; border-radius:9999px; }
+.badge-progress{ background:#FFE9E6; color:var(--primary); }
+.badge-ready{ background:#DDF3DD; color:var(--success); }
+.badge-delivered{ background:#eee; color:#666; }
+.toggle{ position:relative; width:46px; height:26px; flex-shrink:0; }
+.toggle input{ opacity:0; width:0; height:0; }
+.toggle .track{ position:absolute; inset:0; background:#ddd; border-radius:9999px; transition:.2s; cursor:pointer; }
+.toggle .track:before{ content:""; position:absolute; height:20px; width:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.toggle input:checked + .track{ background:var(--primary); }
+.toggle input:checked + .track:before{ transform:translateX(20px); }
+.modal-backdrop{ position:fixed; inset:0; background:rgba(36,25,23,.45); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; padding:20px; z-index:100; }
+.fade-in{ animation:fadeIn .25s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+.stepper button{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; }

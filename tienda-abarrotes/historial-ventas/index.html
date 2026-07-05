@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historial de Ventas · Tienda de Abarrotes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Registro Venta', backHref:'../index.html', homeHref:'../index.html', extraHref:'../historial-permanente/index.html', extraIcon:'inventory_2', extraTitle:'Historial de Tienda de Abarrotes' });
+
+const todayStr = new Date().toDateString();
+const todayTotal = state.sales.filter(s=>new Date(s.createdAt).toDateString()===todayStr).reduce((a,s)=>a+s.total,0);
+
+const groups = { 'Hoy':[], 'Anteriores':[] };
+state.sales.forEach(s => {
+  (new Date(s.createdAt).toDateString()===todayStr ? groups['Hoy'] : groups['Anteriores']).push(s);
+});
+
+function verVenta(id){
+  const s = state.sales.find(x=>x.id===id);
+  if(!s) return;
+  const rows = s.items.map(it => `
+    <div class="flex items-center justify-between py-2 border-b border-[#D4A373]/20 last:border-0">
+      <div>
+        <p class="font-semibold text-sm">${esc(it.name)}</p>
+        <p class="text-xs text-[#57423f]">${money(it.price)} c/u × ${it.qty}</p>
+      </div>
+      <span class="font-bold text-sm text-[#8C261F]">${money(it.price*it.qty)}</span>
+    </div>
+  `).join('');
+  showModal(`
+    <div class="card p-6 max-w-sm w-full space-y-3 fade-in">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold">Detalle de venta</h2>
+        <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5" onclick="closeModal()"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <p class="text-xs text-[#57423f]">${timeAgo(s.createdAt)}</p>
+      <div class="max-h-[45vh] overflow-y-auto">${rows}</div>
+      <div class="border-t border-dashed border-[#D4A373]/60 pt-3 flex justify-between items-end">
+        <span class="font-bold uppercase tracking-wide text-sm">Total</span>
+        <span class="text-xl font-bold text-[#8C261F]">${money(s.total)}</span>
+      </div>
+      <button class="btn-primary tap w-full py-3" onclick="closeModal()">Cerrar</button>
+    </div>
+  `);
+}
+
+const groupHtml = Object.entries(groups).filter(([,arr])=>arr.length).map(([label, arr]) => `
+  <section class="mt-6">
+    <h2 class="text-xs font-bold uppercase tracking-wider text-[#7d562d] mb-2">${label}</h2>
+    <div class="space-y-3">
+      ${arr.map(s => `
+        <button class="card p-4 flex items-center justify-between w-full text-left tap" onclick="verVenta(${s.id})">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-[#ffe9e6] flex items-center justify-center text-[#8c261f]">
+              <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+            </div>
+            <div>
+              <p class="font-semibold text-sm">${esc(s.items[0].name)}${s.items.length>1 ? ` +${s.items.length-1} más` : ''}</p>
+              <p class="text-xs text-[#57423f]">${timeAgo(s.createdAt)}</p>
+            </div>
+          </div>
+          <span class="font-bold text-[#8C261F]">${money(s.total)}</span>
+        </button>
+      `).join('')}
+    </div>
+  </section>
+`).join('');
+
+document.getElementById('app').innerHTML = `
+  <div class="fade-in">
+    <div class="card p-5 flex items-center justify-between mt-4">
+      <div>
+        <p class="text-xs uppercase text-[#57423f] tracking-wide">Total del día</p>
+        <p class="text-2xl font-bold text-[#8C261F]">${money(todayTotal)}</p>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-[#8c261f] flex items-center justify-center text-white">
+        <span class="material-symbols-outlined fill">analytics</span>
+      </div>
+    </div>
+    ${groupHtml || '<p class="text-center text-[#57423f] py-10">Aún no hay ventas registradas.</p>'}
+  </div>
+`;
+</script>
+</body>
+</html>

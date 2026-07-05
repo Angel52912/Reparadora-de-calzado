@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalle de Servicio · Talabartería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Detalle de Servicio', backHref:'../registro-servicios/index.html', homeHref:'../index.html' });
+
+const id = Number(getParam('id'));
+
+function setEstado(status){
+  const list = state.services;
+  const s = list.find(x=>x.id===id);
+  if(s){ s.status = status; state.services = list; paint(); }
+}
+function confirmDelete(){
+  showModal(`
+    <div class="card p-6 max-w-sm w-full text-center space-y-4 fade-in">
+      <div class="w-16 h-16 mx-auto bg-[#ffdad6] rounded-full flex items-center justify-center">
+        <span class="material-symbols-outlined text-[#ba1a1a] text-[36px]">delete</span>
+      </div>
+      <h2 class="text-lg font-bold">Eliminar servicio</h2>
+      <p class="text-[#57423f]">Esta acción no se puede deshacer.</p>
+      <div class="flex flex-col gap-2 pt-2">
+        <button class="btn-ghost tap w-full py-3" onclick="closeModal()">Cancelar</button>
+        <button class="btn-primary tap w-full py-3 !bg-[#ba1a1a]" onclick="doDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  `);
+}
+function doDelete(){
+  state.services = state.services.filter(x=>x.id!==id);
+  location.href = '../registro-servicios/index.html';
+}
+
+function paint(){
+  const s = state.services.find(x=>x.id===id);
+  if(!s){
+    document.getElementById('app').innerHTML = '<p class="text-center text-[#57423f] py-10 fade-in">Servicio no encontrado.</p>';
+    return;
+  }
+  document.getElementById('app').innerHTML = `
+    <div class="fade-in">
+      <div class="card p-6 mt-4 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold">${esc(s.customer)}</h2>
+          <span class="badge ${STATUS_BADGE[s.status]}">${STATUS_LABEL[s.status]}</span>
+        </div>
+        <div class="grid grid-cols-1 gap-3 text-sm">
+          <div><p class="text-[#57423f] uppercase text-xs tracking-wide">Tipo de calzado</p><p class="font-medium">${esc(s.productType)}</p></div>
+          <div><p class="text-[#57423f] uppercase text-xs tracking-wide">Servicio solicitado</p><p class="font-medium">${esc(s.serviceRequested)}</p></div>
+          <div><p class="text-[#57423f] uppercase text-xs tracking-wide">Fecha de entrega</p><p class="font-medium">${esc(s.deliveryDate)}</p></div>
+          ${s.notes ? `<div><p class="text-[#57423f] uppercase text-xs tracking-wide">Notas</p><p class="font-medium">${esc(s.notes)}</p></div>` : ''}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-5">
+        <a href="../editar-servicio/index.html?id=${s.id}" class="btn-secondary tap py-3 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">edit</span> Editar
+        </a>
+        <button class="btn-ghost tap py-3 flex items-center justify-center gap-2" onclick="confirmDelete()">
+          <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-2">
+        ${s.status !== 'listo' ? `<button class="btn-primary tap w-full py-3" onclick="setEstado('listo')">Marcar como listo para entrega</button>` : ''}
+        ${s.status !== 'entregado' ? `<button class="btn-ghost tap w-full py-3" onclick="setEstado('entregado')">Marcar como entregado</button>` : ''}
+        ${s.status === 'entregado' ? `<button class="btn-ghost tap w-full py-3" onclick="setEstado('en_progreso')">Reabrir orden</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+paint();
+</script>
+</body>
+</html>

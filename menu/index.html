@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú · Heritage Service Utility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../shared/js/datos.js"></script>
+<script src="../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Heritage Service Utility', settingsHref:'notificaciones/index.html' });
+
+document.getElementById('app').innerHTML = `
+  <div class="fade-in">
+    <div class="text-center my-10">
+      <h2 class="text-[28px] font-bold text-[#241917] mb-1">Bienvenido de nuevo</h2>
+      <p class="text-[#57423f] text-[17px]">¿A qué sistema desea ingresar?</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <a href="../talabarteria/index.html" class="card tap p-8 flex flex-col items-center text-center hover:-translate-y-1 transition-transform">
+        <div class="w-20 h-20 rounded-full bg-[#D4A373] text-[#2B2B2B] flex items-center justify-center mb-4 shadow">
+          <span class="material-symbols-outlined fill text-[40px]">construction</span>
+        </div>
+        <h3 class="font-semibold text-[19px] mb-1">Talabartería</h3>
+        <p class="text-[11px] uppercase tracking-wider text-[#57423f] mb-3">Órdenes &amp; Artesanía</p>
+        <span class="text-[#7d562d] font-semibold text-sm flex items-center gap-1">Acceder ahora <span class="material-symbols-outlined text-[16px]">arrow_forward</span></span>
+      </a>
+      <a href="../tienda-abarrotes/index.html" class="card tap p-8 flex flex-col items-center text-center hover:-translate-y-1 transition-transform">
+        <div class="w-20 h-20 rounded-full bg-[#8C261F] text-white flex items-center justify-center mb-4 shadow">
+          <span class="material-symbols-outlined fill text-[40px]">shopping_basket</span>
+        </div>
+        <h3 class="font-semibold text-[19px] mb-1">Tienda de abarrotes</h3>
+        <p class="text-[11px] uppercase tracking-wider text-[#57423f] mb-3">Inventario &amp; Ventas</p>
+        <span class="text-[#8C261F] font-semibold text-sm flex items-center gap-1">Acceder ahora <span class="material-symbols-outlined text-[16px]">arrow_forward</span></span>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-8">
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-[#8C261F]">${state.sales.length}</p>
+        <p class="text-xs text-[#57423f] uppercase tracking-wide">Ventas registradas</p>
+      </div>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-[#7d562d]">${state.services.filter(s=>s.status!=='entregado').length}</p>
+        <p class="text-xs text-[#57423f] uppercase tracking-wide">Servicios activos</p>
+      </div>
+    </div>
+  </div>
+`;
+</script>
+</body>
+</html>

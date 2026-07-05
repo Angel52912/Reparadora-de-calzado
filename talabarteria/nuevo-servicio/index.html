@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuevo Servicio · Talabartería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Nuevo Servicio', backHref:'../index.html', homeHref:'../index.html' });
+
+document.getElementById('app').innerHTML = `
+  <form id="form-servicio" class="fade-in space-y-5 mt-4">
+    <div>
+      <label for="customer_name">Nombre del cliente</label>
+      <input id="customer_name" type="text" placeholder="Ej. Juan Pérez" required>
+    </div>
+    <div>
+      <label for="product_type">Tipo de calzado</label>
+      <select id="product_type" required>
+        <option value="">Seleccione…</option>
+        <option>Zapato de vestir</option>
+        <option>Bota</option>
+        <option>Sandalia</option>
+        <option>Tenis</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div>
+      <label for="service_requested">Servicio solicitado</label>
+      <input id="service_requested" type="text" placeholder="Describa el servicio solicitado" required>
+    </div>
+    <div>
+      <label for="delivery_date">Fecha de entrega</label>
+      <input id="delivery_date" type="date" required>
+    </div>
+    <div>
+      <label for="price">Precio</label>
+      <input id="price" type="number" step="0.01" placeholder="Ej. 250.00" required>
+    </div>
+    <div>
+      <label for="notes">Notas</label>
+      <textarea id="notes" rows="3" placeholder="Detalles adicionales, daños previos, etc."></textarea>
+    </div>
+    <button type="submit" class="btn-primary tap w-full py-4 text-[17px] flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">check</span> Registrar servicio
+    </button>
+  </form>
+`;
+
+document.getElementById('form-servicio').addEventListener('submit', function(e){
+  e.preventDefault();
+  const s = {
+    id: Date.now(),
+    customer: document.getElementById('customer_name').value.trim(),
+    productType: document.getElementById('product_type').value,
+    serviceRequested: document.getElementById('service_requested').value.trim(),
+    deliveryDate: document.getElementById('delivery_date').value,
+    price: parseFloat(document.getElementById('price').value),
+    notes: document.getElementById('notes').value.trim(),
+    status: 'en_progreso',
+    createdAt: Date.now(),
+  };
+  if(!s.customer || !s.productType || !s.serviceRequested || !s.deliveryDate || isNaN(s.price)) return false;
+  const list = state.services;
+  list.unshift(s);
+  state.services = list;
+  location.href = '../confirmacion-servicio/index.html?id=' + s.id;
+});
+</script>
+</body>
+</html>

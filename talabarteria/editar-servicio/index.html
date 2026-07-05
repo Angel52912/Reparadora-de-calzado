@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editar Servicio · Talabartería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+const id = Number(getParam('id'));
+renderHeader({ title:'Editar Servicio', backHref:'../detalle-servicio/index.html?id=' + id, homeHref:'../index.html' });
+
+const s = state.services.find(x=>x.id===id);
+if(!s){
+  document.getElementById('app').innerHTML = '<p class="text-center text-[#57423f] py-10 fade-in">Servicio no encontrado.</p>';
+} else {
+  const tipos = ['Zapato de vestir','Bota','Sandalia','Tenis','Otro'];
+  document.getElementById('app').innerHTML = `
+    <form id="form-editar" class="fade-in space-y-5 mt-4">
+      <div>
+        <label>Nombre del cliente</label>
+        <input id="e_customer_name" type="text" value="${esc(s.customer)}" required>
+      </div>
+      <div>
+        <label>Tipo de calzado</label>
+        <select id="e_product_type" required>
+          ${tipos.map(t=>`<option ${t===s.productType?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label>Servicio solicitado</label>
+        <input id="e_service_requested" type="text" value="${esc(s.serviceRequested)}" required>
+      </div>
+      <div>
+        <label>Fecha de entrega</label>
+        <input id="e_delivery_date" type="date" value="${esc(s.deliveryDate)}" required>
+      </div>
+      <div>
+        <label>Notas</label>
+        <textarea id="e_notes" rows="3">${esc(s.notes)}</textarea>
+      </div>
+      <div>
+        <label>Estado</label>
+        <select id="e_status">
+          <option value="en_progreso" ${s.status==='en_progreso'?'selected':''}>En progreso</option>
+          <option value="listo" ${s.status==='listo'?'selected':''}>Listo para entrega</option>
+          <option value="entregado" ${s.status==='entregado'?'selected':''}>Entregado</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary tap w-full py-4 text-[17px] flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">check</span> Guardar cambios
+      </button>
+    </form>
+  `;
+
+  document.getElementById('form-editar').addEventListener('submit', function(e){
+    e.preventDefault();
+    const list = state.services;
+    const target = list.find(x=>x.id===id);
+    target.customer = document.getElementById('e_customer_name').value.trim();
+    target.productType = document.getElementById('e_product_type').value;
+    target.serviceRequested = document.getElementById('e_service_requested').value.trim();
+    target.deliveryDate = document.getElementById('e_delivery_date').value;
+    target.notes = document.getElementById('e_notes').value.trim();
+    target.status = document.getElementById('e_status').value;
+    state.services = list;
+    location.href = '../detalle-servicio/index.html?id=' + id;
+  });
+}
+</script>
+</body>
+</html>

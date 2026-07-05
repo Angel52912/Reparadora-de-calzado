@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registros de Servicio · Talabartería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Registros de Servicio', backHref:'../index.html', homeHref:'../index.html', extraHref:'../historial-permanente/index.html', extraIcon:'history_edu', extraTitle:'Historial de Talabartería' });
+
+const sorted = [...state.services].sort((a,b)=>b.createdAt-a.createdAt);
+const rows = sorted.map(s => `
+  <a href="../detalle-servicio/index.html?id=${s.id}" class="card p-4 flex items-center justify-between tap cursor-pointer">
+    <div>
+      <h3 class="font-semibold">${esc(s.customer)}</h3>
+      <p class="text-sm text-[#57423f]">${esc(s.productType)} · ${esc(s.serviceRequested)}</p>
+    </div>
+    <span class="badge ${STATUS_BADGE[s.status]}">${STATUS_LABEL[s.status]}</span>
+  </a>
+`).join('');
+
+document.getElementById('app').innerHTML = `
+  <div class="fade-in">
+    <div class="flex items-center justify-between my-4">
+      <h2 class="text-xl font-bold">Órdenes</h2>
+    </div>
+    <div class="space-y-3">${rows || '<p class="text-center text-[#57423f] py-10">No hay servicios registrados.</p>'}</div>
+  </div>
+`;
+
+document.getElementById('app').insertAdjacentHTML('beforeend', `
+  <a href="../nuevo-servicio/index.html" class="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-[#8C261F] text-white flex items-center justify-center shadow-xl tap z-30">
+    <span class="material-symbols-outlined text-[28px]">add</span>
+  </a>
+`);
+</script>
+</body>
+</html>
