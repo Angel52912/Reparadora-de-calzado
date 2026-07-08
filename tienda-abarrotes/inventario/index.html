@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario · Tienda de Abarrotes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="stylesheet" href="../../shared/css/estilos.css">
+</head>
+<body>
+<div id="header"></div>
+<main id="app" class="max-w-2xl mx-auto w-full pb-28 px-4"></main>
+<div id="modal-root"></div>
+
+<script src="../../shared/js/datos.js"></script>
+<script src="../../shared/js/ui.js"></script>
+<script>
+renderHeader({ title:'Inventario', backHref:'../index.html', homeHref:'../index.html' });
+
+let working = state.products.map(p => ({...p}));
+let editMode = false;
+
+function toggleEditMode() {
+  editMode = !editMode;
+  paint();
+}
+
+function updateField(id, field, value){
+  const item = working.find(x=>x.id===id);
+  if(!item) return;
+  if(field === 'price'){ item.price = parseFloat(value) || 0; }
+  else if(field === 'stock'){ item.stock = parseInt(value) || 0; }
+  else { item.name = value; }
+}
+
+function adjustStock(id, amount){
+  const item = working.find(x=>x.id===id);
+  if(!item) return;
+  item.stock = Math.max(0, (parseInt(item.stock) || 0) + amount);
+  paint();
+}
+
+function adjustPrice(id, amount){
+  const item = working.find(x=>x.id===id);
+  if(!item) return;
+  item.price = Math.max(0, (parseFloat(item.price) || 0) + amount);
+  paint();
+}
+
+function deleteOne(id){
+  working = working.filter(x=>x.id!==id);
+  paint();
+}
+
+function saveChanges(){
+  state.products = working.map(p => ({ 
+    id:p.id, 
+    name:(p.name||'').trim() || 'Producto sin nombre', 
+    price: Number(p.price) || 0,
+    stock: parseInt(p.stock) || 0 
+  }));
+  editMode = false;
+  paint();
+}
+
+function paint(){
+  const list = working;
+  const container = document.getElementById('app');
+  
+  container.innerHTML = `
+    <div class="fade-in mt-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-[#241917]">Productos (${list.length})</h2>
+        <div class="flex gap-2">
+            <button onclick="toggleEditMode()" class="btn-ghost py-2 px-4 text-sm">
+                ${editMode ? 'Cancelar' : 'Editar Inventario'}
+            </button>
+            <a href="../agregar-producto/index.html" class="btn-primary py-2 px-4 flex items-center gap-1 text-sm">
+            <span class="material-symbols-outlined">add</span> Nuevo
+            </a>
+        </div>
+      </div>
+      <div id="product-list" class="space-y-4 pb-20"></div>
+    </div>
+  `;
+  
+  const listContainer = document.getElementById('product-list');
+  listContainer.innerHTML = list.map(p => `
+    <div class="card p-4 flex flex-col gap-3">
+      ${editMode 
+        ? `<input type="text" value="${esc(p.name)}" oninput="updateField(${p.id},'name',this.value)" placeholder="Nombre del producto">`
+        : `<h3 class="font-bold text-lg">${esc(p.name)}</h3>`
+      }
+      
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-[#57423f]">Precio</span>
+          ${editMode 
+            ? `<div class="flex items-center border border-[#2B2B2B] rounded-lg overflow-hidden">
+                <button class="w-10 h-10 flex items-center justify-center bg-gray-100" onclick="adjustPrice(${p.id}, -1)">-</button>
+                <input type="number" step="0.01" value="${p.price}" oninput="updateField(${p.id},'price',this.value)" class="!border-none !text-center w-24 p-2" placeholder="Precio">
+                <button class="w-10 h-10 flex items-center justify-center bg-gray-100" onclick="adjustPrice(${p.id}, 1)">+</button>
+              </div>`
+            : `<div class="p-2 font-mono">${money(p.price)}</div>`
+          }
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-[#57423f]">Cantidad</span>
+          ${editMode 
+            ? `<div class="flex items-center border border-[#2B2B2B] rounded-lg overflow-hidden">
+                <button class="w-10 h-10 flex items-center justify-center bg-gray-100" onclick="adjustStock(${p.id}, -1)">-</button>
+                <input type="number" value="${p.stock || 0}" oninput="updateField(${p.id},'stock',this.value)" class="!border-none !text-center w-20 p-2" placeholder="Cantidad">
+                <button class="w-10 h-10 flex items-center justify-center bg-gray-100" onclick="adjustStock(${p.id}, 1)">+</button>
+              </div>`
+            : `<div class="p-2 font-mono">${p.stock || 0}</div>`
+          }
+        </div>
+        ${editMode 
+            ? `<button class="btn-ghost tap w-11 h-11 flex items-center justify-center flex-shrink-0 mt-4" title="Eliminar" onclick="deleteOne(${p.id})">
+                <span class="material-symbols-outlined text-[#ba1a1a]">delete</span>
+              </button>`
+            : ''
+        }
+      </div>
+    </div>
+  `).join('');
+
+  if(editMode){
+    document.getElementById('app').insertAdjacentHTML('beforeend', `
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-[#FEF9F0] border-t border-[#D4A373]/30">
+          <button class="btn-primary w-full py-4" onclick="saveChanges()">Guardar cambios</button>
+        </div>
+    `);
+  }
+}
+paint();
+</script>
+</body>
+</html>

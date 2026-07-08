@@ -20,6 +20,17 @@
 <script>
 renderHeader({ title:'Agregar Producto', backHref:'../catalogo/index.html', homeHref:'../index.html' });
 
+let price = 0;
+let stock = 0;
+function adjustPrice(amount){
+  price = Math.max(0, price + amount);
+  document.getElementById('price').value = price.toFixed(2);
+}
+function adjustStock(amount){
+  stock = Math.max(0, stock + amount);
+  document.getElementById('stock').value = stock;
+}
+
 document.getElementById('app').innerHTML = `
   <form id="form-producto" class="fade-in space-y-5 mt-4">
     <div>
@@ -28,7 +39,19 @@ document.getElementById('app').innerHTML = `
     </div>
     <div>
       <label for="price">Precio unitario</label>
-      <input id="price" type="number" min="0" step="0.01" placeholder="0.00" required>
+      <div class="flex items-center gap-2">
+        <button type="button" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200" onclick="adjustPrice(-1)">-</button>
+        <input id="price" type="number" step="0.01" value="0.00" class="!text-center" oninput="price = parseFloat(this.value) || 0" onkeydown="return event.keyCode !== 69" required>
+        <button type="button" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200" onclick="adjustPrice(1)">+</button>
+      </div>
+    </div>
+    <div>
+      <label for="stock">Cantidad Inicial</label>
+      <div class="flex items-center gap-2">
+        <button type="button" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200" onclick="adjustStock(-1)">-</button>
+        <input id="stock" type="number" value="0" class="!text-center" oninput="stock = parseInt(this.value) || 0" onkeydown="return event.keyCode !== 69" required>
+        <button type="button" class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200" onclick="adjustStock(1)">+</button>
+      </div>
     </div>
     <button type="submit" class="btn-primary tap w-full py-4 text-[17px] flex items-center justify-center gap-2">
       <span class="material-symbols-outlined">check</span> Guardar producto
@@ -39,10 +62,9 @@ document.getElementById('app').innerHTML = `
 document.getElementById('form-producto').addEventListener('submit', function(e){
   e.preventDefault();
   const name = document.getElementById('product_name').value.trim();
-  const price = parseFloat(document.getElementById('price').value);
-  if(!name || isNaN(price)) return false;
+  if(!name || price <= 0) return false;
   const list = state.products;
-  list.push({ id: Date.now(), name, price });
+  list.push({ id: Date.now(), name, price, stock });
   state.products = list;
   location.href = '../catalogo/index.html';
 });

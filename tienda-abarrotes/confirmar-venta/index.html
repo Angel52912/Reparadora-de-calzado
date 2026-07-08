@@ -64,6 +64,17 @@ function confirmarVenta(){
   const btn = document.getElementById('confirmBtn');
   btn.disabled = true;
   btn.innerHTML = 'Procesando…';
+  
+  // Reducir stock globalmente
+  const currentProducts = state.products;
+  state.cart.forEach(cartItem => {
+    const product = currentProducts.find(p => p.id === cartItem.id);
+    if(product) {
+      product.stock = Math.max(0, (product.stock || 0) - cartItem.qty);
+    }
+  });
+  state.products = currentProducts;
+
   setTimeout(() => {
     const sale = { id: Date.now(), items: state.cart.map(i=>({name:i.name, qty:i.qty, price:i.price})), total: cartTotal(), createdAt: Date.now() };
     const sales = state.sales;
@@ -77,7 +88,7 @@ function confirmarVenta(){
           <span class="material-symbols-outlined fill text-[44px] text-[#8C261F]">check_circle</span>
         </div>
         <h2 class="text-lg font-bold">Venta registrada</h2>
-        <p class="text-[#57423f]">La transacción se ha completado con éxito.</p>
+        <p class="text-[#57423f]">La transacción se ha completado y el inventario ha sido actualizado.</p>
         <a href="../index.html" class="btn-primary tap w-full py-3 mt-2 block">Aceptar</a>
       </div>
     `);

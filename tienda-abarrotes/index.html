@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tienda de Abarrotes · Heritage Service Utility</title>
+<title>Tienda de Abarrotes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
 <script src="../shared/js/datos.js"></script>
 <script src="../shared/js/ui.js"></script>
 <script>
-renderHeader({ title:'Abarrotes', backHref:'../menu/index.html', settingsHref:'../menu/notificaciones/index.html', extraHref:'historial-permanente/index.html', extraIcon:'inventory_2', extraTitle:'Historial de Tienda de Abarrotes' });
+renderHeader({ title:'', backHref:'../menu/index.html', settingsHref:'../menu/notificaciones/index.html', extraHref:'historial-permanente/index.html', extraIcon:'inventory_2', extraTitle:'Historial de Tienda de Abarrotes' });
 
 const todayStr = new Date().toDateString();
 const todayCount = state.sales.filter(s=>new Date(s.createdAt).toDateString()===todayStr).length;
@@ -29,7 +29,7 @@ document.getElementById('app').innerHTML = `
       <h2 class="text-[26px] font-bold text-[#241917] mb-1">¡Hola de nuevo!</h2>
       <p class="text-[#57423f]">¿Qué vamos a hacer hoy en el negocio?</p>
     </section>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <a href="catalogo/index.html" class="tap p-6 rounded-xl bg-[#8c261f] text-white flex flex-col items-center text-center gap-3 border-b-4 border-[#6c0d0b] shadow">
         <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
           <span class="material-symbols-outlined fill text-[36px]">shopping_cart</span>
@@ -46,6 +46,15 @@ document.getElementById('app').innerHTML = `
         <div>
           <h3 class="font-bold text-lg mb-1">Registros de ventas</h3>
           <p class="text-xs opacity-90">Consulta el historial</p>
+        </div>
+      </a>
+      <a href="inventario/index.html" class="tap p-6 rounded-xl bg-[#2b2b2b] text-white flex flex-col items-center text-center gap-3 border-b-4 border-[#1a1a1a] shadow">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="material-symbols-outlined text-[36px]">inventory_2</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-1">Inventario</h3>
+          <p class="text-xs opacity-90">Gestionar productos</p>
         </div>
       </a>
     </div>
