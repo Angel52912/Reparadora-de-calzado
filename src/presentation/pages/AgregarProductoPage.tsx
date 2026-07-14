@@ -37,8 +37,9 @@ export const AgregarProductoPage: React.FC = () => {
           <TextField 
             label="Nombre del producto" 
             variant="outlined"
-            slotProps={{ inputLabel: { shrink: true } }}
+            InputLabelProps={{ shrink: true }}
             fullWidth 
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.nombre} 
             onChange={e => setFormData({...formData, nombre: e.target.value})} 
           />
@@ -46,8 +47,9 @@ export const AgregarProductoPage: React.FC = () => {
             label="Precio de venta" 
             type="number" 
             variant="outlined"
-            slotProps={{ inputLabel: { shrink: true } }}
+            InputLabelProps={{ shrink: true }}
             fullWidth 
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.precio_venta} 
             onChange={e => setFormData({...formData, precio_venta: Number(e.target.value)})} 
           />
@@ -55,14 +57,15 @@ export const AgregarProductoPage: React.FC = () => {
             label="Stock Inicial" 
             type="number" 
             variant="outlined"
-            slotProps={{ inputLabel: { shrink: true } }}
+            InputLabelProps={{ shrink: true }}
             fullWidth 
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.stock_actual} 
             onChange={e => setFormData({...formData, stock_actual: Number(e.target.value)})} 
           />
           <Button 
             className="btn-primary" 
-            sx={{ mt: 2, py: 1.5, backgroundColor: '#8C261F', '&:hover': { backgroundColor: '#6b1d18' } }} 
+            sx={{ mt: 2, py: 1.5, backgroundColor: '#1976d2', color: '#FFFFFF', '&:hover': { backgroundColor: '#1565c0' } }} 
             onClick={handleSubmit}
           >
             Guardar Producto

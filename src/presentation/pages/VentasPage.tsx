@@ -23,10 +23,41 @@ export const VentasPage: React.FC = () => {
   const addToCart = (producto: Producto) => {
     setCarrito(prev => {
       const existing = prev.find(item => item.producto.id_producto === producto.id_producto);
+      
+      // Si ya existe en el carrito
       if (existing) {
-        return prev.map(item => item.producto.id_producto === producto.id_producto ? { ...item, cantidad: item.cantidad + 1 } : item);
+        if (existing.cantidad < producto.stock_actual) {
+          return prev.map(item => item.producto.id_producto === producto.id_producto 
+            ? { ...item, cantidad: item.cantidad + 1 } 
+            : item
+          );
+        }
+        // Si ya alcanzó el stock, no hacemos nada más que avisar
+        return prev;
       }
-      return [...prev, { producto, cantidad: 1 }];
+      
+      // Si no existe, agregamos solo si hay stock
+      return producto.stock_actual > 0 
+        ? [...prev, { producto, cantidad: 1 }] 
+        : prev;
+    });
+  };
+
+  const removeFromCart = (producto: Producto) => {
+    setCarrito(prev => {
+      const existing = prev.find(item => item.producto.id_producto === producto.id_producto);
+      if (existing) {
+        // Si la cantidad es mayor a 1, restamos
+        if (existing.cantidad > 1) {
+          return prev.map(item => item.producto.id_producto === producto.id_producto 
+            ? { ...item, cantidad: item.cantidad - 1 } 
+            : item
+          );
+        }
+        // Si es 1, eliminamos el item
+        return prev.filter(item => item.producto.id_producto !== producto.id_producto);
+      }
+      return prev;
     });
   };
 
@@ -73,8 +104,12 @@ export const VentasPage: React.FC = () => {
             <Grid size={12} sx={{ mt: 4 }}>
               <Typography variant="h6" sx={{ color: '#57423f', mb: 2 }}>Carrito</Typography>
               {carrito.map(item => (
-                <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between' }}>
+                <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography>{item.producto.nombre} x {item.cantidad}</Typography>
+                  <Box>
+                    <Button size="small" onClick={() => removeFromCart(item.producto)}>-</Button>
+                    <Button size="small" onClick={() => addToCart(item.producto)}>+</Button>
+                  </Box>
                   <Typography>${(item.producto.precio_venta * item.cantidad).toFixed(2)}</Typography>
                 </Box>
               ))}

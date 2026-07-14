@@ -38,38 +38,42 @@ export const NuevoServicioPage: React.FC = () => {
     <Box className="fade-in">
       <Header title="Nuevo Servicio" backHref="/talabarteria" homeHref="/" />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
-        <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField 
             label="Nombre del cliente" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.nombre_cliente} 
             onChange={e => setFormData({...formData, nombre_cliente: e.target.value})} 
           />
           <TextField 
             label="Teléfono" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.telefono} 
             onChange={e => setFormData({...formData, telefono: e.target.value})} 
           />
           <TextField 
             label="Producto" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.producto} 
             onChange={e => setFormData({...formData, producto: e.target.value})} 
           />
           <TextField 
             label="Servicio solicitado" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
             multiline 
             rows={2} 
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.servicio_solicitado} 
             onChange={e => setFormData({...formData, servicio_solicitado: e.target.value})} 
           />
@@ -77,8 +81,9 @@ export const NuevoServicioPage: React.FC = () => {
             label="Costo mano obra" 
             type="number" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_mano_obra} 
             onChange={e => setFormData({...formData, costo_mano_obra: Number(e.target.value)})} 
           />
@@ -86,8 +91,9 @@ export const NuevoServicioPage: React.FC = () => {
             label="Costo materiales" 
             type="number" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_materiales} 
             onChange={e => setFormData({...formData, costo_materiales: Number(e.target.value)})} 
           />
@@ -95,8 +101,9 @@ export const NuevoServicioPage: React.FC = () => {
             label="Anticipo" 
             type="number" 
             variant="outlined" 
-            slotProps={{ inputLabel: { shrink: true } }} 
-            fullWidth 
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.anticipo} 
             onChange={e => setFormData({...formData, anticipo: Number(e.target.value)})} 
           />
