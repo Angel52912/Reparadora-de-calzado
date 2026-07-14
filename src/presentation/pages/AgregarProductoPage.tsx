@@ -31,6 +31,14 @@ export const AgregarProductoPage: React.FC = () => {
     }
   }, [id]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: (name === 'precio_venta' || name === 'stock_actual') ? Number(value) : value
+    }));
+  };
+
   const handleSubmit = async () => {
     try {
       if (id) {
@@ -62,15 +70,17 @@ export const AgregarProductoPage: React.FC = () => {
         <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography variant="h6" sx={{ color: '#8C261F', mb: 1 }}>Detalles del Producto</Typography>
           <TextField 
+            name="nombre"
             label="Nombre del producto" 
             variant="outlined"
             InputLabelProps={{ shrink: true }}
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.nombre} 
-            onChange={e => setFormData({...formData, nombre: e.target.value})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="precio_venta"
             label="Precio de venta" 
             type="number" 
             variant="outlined"
@@ -78,9 +88,10 @@ export const AgregarProductoPage: React.FC = () => {
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.precio_venta} 
-            onChange={e => setFormData({...formData, precio_venta: Number(e.target.value)})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="stock_actual"
             label="Stock Inicial" 
             type="number" 
             variant="outlined"
@@ -88,7 +99,7 @@ export const AgregarProductoPage: React.FC = () => {
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.stock_actual} 
-            onChange={e => setFormData({...formData, stock_actual: Number(e.target.value)})} 
+            onChange={handleInputChange} 
           />
           <Button 
             className="btn-primary" 

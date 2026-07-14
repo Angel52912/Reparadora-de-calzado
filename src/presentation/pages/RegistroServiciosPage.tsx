@@ -54,23 +54,23 @@ export const RegistroServiciosPage: React.FC = () => {
           <Grid container spacing={2}>
             {tickets.map(t => (
               <Grid size={{ xs: 12 }} key={t.id_servicio}>
-                <ButtonBase onClick={() => navigate(`/talabarteria/servicio/${t.id_servicio}`)} sx={{ width: '100%', display: 'block', textAlign: 'left' }}>
-                  <Paper className="card" sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Paper className="card" sx={{ p: 0 }}>
+                  <Box onClick={() => navigate(`/talabarteria/servicio/${t.id_servicio}`)} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
                     <Box>
                       <Typography sx={{ fontWeight: 600 }}>{t.producto} - {t.nombre_cliente}</Typography>
                       <Typography sx={{ fontSize: '13px', color: '#57423f' }}>{t.servicio_solicitado}</Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Chip label={t.estado} color={getStatusColor(t.estado) as any} size="small" />
-                      <IconButton onClick={(e) => { e.stopPropagation(); navigate(`/talabarteria/editar/${t.id_servicio}`); }} color="primary" size="small">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={(e) => handleDelete(e, t.id_servicio)} color="error" size="small">
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Paper>
-                </ButtonBase>
+                  </Box>
+                  <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}>
+                    <Chip label={t.estado} color={getStatusColor(t.estado) as any} size="small" />
+                    <IconButton onClick={() => navigate(`/talabarteria/editar/${t.id_servicio}`)} color="primary" size="small">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => handleDelete(e, t.id_servicio)} color="error" size="small">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Paper>
               </Grid>
             ))}
           </Grid>

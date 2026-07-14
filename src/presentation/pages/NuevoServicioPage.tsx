@@ -40,20 +40,35 @@ export const NuevoServicioPage: React.FC = () => {
     }
   }, [id]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: (name === 'costo_mano_obra' || name === 'costo_materiales' || name === 'anticipo') ? Number(value) : value
+    }));
+  };
+
   const handleSubmit = async () => {
     try {
       if (id) {
         await tallerUseCases.actualizarTicket(id, {
-          ...formData,
-          costo_total: Number(formData.costo_mano_obra) + Number(formData.costo_materiales)
+          nombre_cliente: formData.nombre_cliente,
+          telefono: formData.telefono,
+          producto: formData.producto,
+          servicio_solicitado: formData.servicio_solicitado,
+          costo_mano_obra: Number(formData.costo_mano_obra),
+          costo_materiales: Number(formData.costo_materiales),
+          anticipo: Number(formData.anticipo)
         });
         alert('Ticket actualizado con éxito');
         navigate('/talabarteria/registro-servicios');
       } else {
-        const { costo_total, ...ticketData } = {
+        const ticketData = {
           ...formData,
           estado: 'Recibido' as EstadoTicket,
-          costo_total: Number(formData.costo_mano_obra) + Number(formData.costo_materiales)
+          costo_mano_obra: Number(formData.costo_mano_obra),
+          costo_materiales: Number(formData.costo_materiales),
+          anticipo: Number(formData.anticipo)
         };
         await tallerUseCases.crearTicket(ticketData);
         alert('Ticket registrado con éxito');
@@ -70,33 +85,37 @@ export const NuevoServicioPage: React.FC = () => {
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
         <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField 
+            name="nombre_cliente"
             label="Nombre del cliente" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.nombre_cliente} 
-            onChange={e => setFormData({...formData, nombre_cliente: e.target.value})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="telefono"
             label="Teléfono" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.telefono} 
-            onChange={e => setFormData({...formData, telefono: e.target.value})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="producto"
             label="Producto" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.producto} 
-            onChange={e => setFormData({...formData, producto: e.target.value})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="servicio_solicitado"
             label="Servicio solicitado" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
@@ -105,9 +124,10 @@ export const NuevoServicioPage: React.FC = () => {
             rows={2} 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.servicio_solicitado} 
-            onChange={e => setFormData({...formData, servicio_solicitado: e.target.value})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="costo_mano_obra"
             label="Costo mano obra" 
             type="number" 
             variant="outlined" 
@@ -115,9 +135,10 @@ export const NuevoServicioPage: React.FC = () => {
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_mano_obra} 
-            onChange={e => setFormData({...formData, costo_mano_obra: Number(e.target.value)})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="costo_materiales"
             label="Costo materiales" 
             type="number" 
             variant="outlined" 
@@ -125,9 +146,10 @@ export const NuevoServicioPage: React.FC = () => {
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_materiales} 
-            onChange={e => setFormData({...formData, costo_materiales: Number(e.target.value)})} 
+            onChange={handleInputChange} 
           />
           <TextField 
+            name="anticipo"
             label="Anticipo" 
             type="number" 
             variant="outlined" 
@@ -135,7 +157,7 @@ export const NuevoServicioPage: React.FC = () => {
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.anticipo} 
-            onChange={e => setFormData({...formData, anticipo: Number(e.target.value)})} 
+            onChange={handleInputChange} 
           />
           <Button className="btn-primary" sx={{ mt: 2, py: 1.5 }} onClick={handleSubmit}>{id ? "Actualizar Orden" : "Registrar Orden"}</Button>
         </Box>

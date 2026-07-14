@@ -42,9 +42,16 @@ export const DetalleServicioPage: React.FC = () => {
       <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6">{ticket.producto}</Typography>
-          <Typography>Cliente: {ticket.nombre_cliente}</Typography>
-          <Typography>Servicio: {ticket.servicio_solicitado}</Typography>
-          <Typography>Costo Total: ${ticket.costo_total.toFixed(2)}</Typography>
+          <Typography sx={{ mt: 1 }}><strong>Cliente:</strong> {ticket.nombre_cliente}</Typography>
+          <Typography><strong>Teléfono:</strong> {ticket.telefono || 'No proporcionado'}</Typography>
+          <Typography sx={{ mt: 1 }}><strong>Servicio:</strong> {ticket.servicio_solicitado}</Typography>
+          <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+            <Typography><strong>Costo Mano de Obra:</strong> ${ticket.costo_mano_obra.toFixed(2)}</Typography>
+            <Typography><strong>Costo Materiales:</strong> ${ticket.costo_materiales.toFixed(2)}</Typography>
+            <Typography sx={{ mt: 1, fontWeight: 'bold' }}><strong>Costo Total:</strong> ${ticket.costo_total.toFixed(2)}</Typography>
+            <Typography><strong>Anticipo:</strong> ${ticket.anticipo.toFixed(2)}</Typography>
+            <Typography><strong>Restante:</strong> ${(ticket.costo_total - ticket.anticipo).toFixed(2)}</Typography>
+          </Box>
           <Box sx={{ mt: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Estado</InputLabel>

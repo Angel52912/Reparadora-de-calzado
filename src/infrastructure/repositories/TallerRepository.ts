@@ -30,7 +30,8 @@ export class TallerRepository implements ITallerRepository {
   }
 
   async updateTicket(id: string, ticket: Partial<TicketTaller>): Promise<void> {
-    const { error } = await supabase.from('taller_tickets').update(ticket).eq('id_servicio', id);
+    const { costo_total, ...dataToUpdate } = ticket;
+    const { error } = await supabase.from('taller_tickets').update(dataToUpdate).eq('id_servicio', id);
     if (error) throw error;
   }
 
