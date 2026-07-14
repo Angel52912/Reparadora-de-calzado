@@ -9,5 +9,6 @@ export interface ITiendaRepository {
   getVentas(): Promise<Venta[]>;
   getDetallesByVentaId(id_venta: number): Promise<DetalleVenta[]>;
   updateStock(id_producto: number, nuevoStock: number): Promise<void>;
+  updateProducto(id_producto: number, producto: Partial<Omit<Producto, 'id_producto'>>): Promise<void>;
   deleteProducto(id_producto: number): Promise<void>;
 }

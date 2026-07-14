@@ -3,6 +3,8 @@ import { Box, Typography, Grid, CircularProgress, IconButton, Button } from '@mu
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -15,6 +17,7 @@ export const InventarioPage: React.FC = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [loading, setLoading] = useState(true);
   const [cambios, setCambios] = useState<Record<number, number>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     tiendaUseCases.getProductos().then(data => {
@@ -76,6 +79,7 @@ export const InventarioPage: React.FC = () => {
                     <IconButton onClick={() => updateStockLocal(p.id_producto, -1)}><RemoveIcon /></IconButton>
                     <Typography sx={{ width: 30, textAlign: 'center' }}>{p.stock_actual}</Typography>
                     <IconButton onClick={() => updateStockLocal(p.id_producto, 1)}><AddIcon /></IconButton>
+                    <IconButton onClick={() => navigate(`/tienda-abarrotes/editar/${p.id_producto}`)} color="primary"><EditIcon /></IconButton>
                     <IconButton onClick={() => handleDelete(p.id_producto)} color="error"><DeleteIcon /></IconButton>
                   </Box>
                 </Box>

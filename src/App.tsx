@@ -21,12 +21,14 @@ function App() {
         <Route path="/" element={<MenuPage />} />
         <Route path="/talabarteria" element={<TalabarteriaMenuPage />} />
         <Route path="/talabarteria/nuevo" element={<NuevoServicioPage />} />
+        <Route path="/talabarteria/editar/:id" element={<NuevoServicioPage />} />
         <Route path="/talabarteria/registro-servicios" element={<RegistroServiciosPage />} />
         <Route path="/talabarteria/servicio/:id" element={<DetalleServicioPage />} />
         <Route path="/tienda-abarrotes/catalogo" element={<CatalogoPage />} />
         <Route path="/tienda-abarrotes/ventas" element={<VentasPage />} />
         <Route path="/tienda-abarrotes/inventario" element={<InventarioPage />} />
         <Route path="/tienda-abarrotes/agregar" element={<AgregarProductoPage />} />
+        <Route path="/tienda-abarrotes/editar/:id" element={<AgregarProductoPage />} />
         <Route path="/tienda-abarrotes/historial" element={<HistorialVentasPage />} />
         <Route path="/tienda-abarrotes" element={<TiendaMenuPage />} />
         <Route path="/notificaciones" element={<NotificacionesPage />} />

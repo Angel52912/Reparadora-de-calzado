@@ -63,4 +63,8 @@ export class TiendaUseCases {
   async eliminarProducto(id_producto: number): Promise<void> {
     return this.tiendaRepository.deleteProducto(id_producto);
   }
+
+  async actualizarProducto(id_producto: number, producto: Partial<Omit<Producto, 'id_producto'>>): Promise<void> {
+    return this.tiendaRepository.updateProducto(id_producto, producto);
+  }
 }

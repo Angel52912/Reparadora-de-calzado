@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, CircularProgress, Paper, Chip, ButtonBase, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
@@ -61,6 +62,9 @@ export const RegistroServiciosPage: React.FC = () => {
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Chip label={t.estado} color={getStatusColor(t.estado) as any} size="small" />
+                      <IconButton onClick={(e) => { e.stopPropagation(); navigate(`/talabarteria/editar/${t.id_servicio}`); }} color="primary" size="small">
+                        <EditIcon />
+                      </IconButton>
                       <IconButton onClick={(e) => handleDelete(e, t.id_servicio)} color="error" size="small">
                         <DeleteIcon />
                       </IconButton>

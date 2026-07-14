@@ -56,6 +56,11 @@ export class TiendaRepository implements ITiendaRepository {
     if (error) throw error;
   }
 
+  async updateProducto(id_producto: number, producto: Partial<Omit<Producto, 'id_producto'>>): Promise<void> {
+    const { error } = await supabase.from('tienda_productos').update(producto).eq('id_producto', id_producto);
+    if (error) throw error;
+  }
+
   async deleteProducto(id_producto: number): Promise<void> {
     const { error } = await supabase.from('tienda_productos').delete().eq('id_producto', id_producto);
     if (error) throw error;
