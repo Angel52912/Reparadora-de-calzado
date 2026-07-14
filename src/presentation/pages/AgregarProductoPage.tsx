@@ -90,9 +90,9 @@ export const AgregarProductoPage: React.FC = () => {
             name="nombre"
             label="Nombre del producto" 
             variant="outlined"
-            InputLabelProps={{ shrink: true } as any}
+            InputLabelProps={{ shrink: true }}
             fullWidth 
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.nombre} 
             onChange={handleInputChange} 
           />
@@ -101,10 +101,10 @@ export const AgregarProductoPage: React.FC = () => {
             label="Precio de venta" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true } as any}
-            inputProps={{ min: 0 } as any}
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ min: 0 }}
             fullWidth 
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.precio_venta} 
             onChange={handleInputChange} 
           />
@@ -113,13 +113,14 @@ export const AgregarProductoPage: React.FC = () => {
             label="Stock Inicial" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true } as any}
-            inputProps={{ min: 0 } as any}
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ min: 0 }}
             fullWidth 
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.stock_actual} 
             onChange={handleInputChange} 
           />
+
           <Button 
             className="btn-primary" 
             sx={{ mt: 2, py: 1.5, backgroundColor: '#1976d2', color: '#FFFFFF', '&:hover': { backgroundColor: '#1565c0' } }} 

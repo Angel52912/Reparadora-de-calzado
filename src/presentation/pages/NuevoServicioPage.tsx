@@ -117,7 +117,7 @@ export const NuevoServicioPage: React.FC = () => {
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.nombre_cliente} 
             onChange={handleInputChange} 
           />
@@ -127,7 +127,7 @@ export const NuevoServicioPage: React.FC = () => {
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.telefono} 
             onChange={handleInputChange} 
           />
@@ -137,7 +137,7 @@ export const NuevoServicioPage: React.FC = () => {
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.producto} 
             onChange={handleInputChange} 
           />
@@ -149,7 +149,7 @@ export const NuevoServicioPage: React.FC = () => {
             fullWidth
             multiline 
             rows={2} 
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.servicio_solicitado} 
             onChange={handleInputChange} 
           />
@@ -161,7 +161,7 @@ export const NuevoServicioPage: React.FC = () => {
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: 0 }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.costo_mano_obra} 
             onChange={handleInputChange} 
           />
@@ -173,7 +173,7 @@ export const NuevoServicioPage: React.FC = () => {
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: 0 }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.costo_materiales} 
             onChange={handleInputChange} 
           />
@@ -185,7 +185,7 @@ export const NuevoServicioPage: React.FC = () => {
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: 0 }}
             fullWidth
-            sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
+            sx={{ mt: 4 }}
             value={formData.anticipo} 
             onChange={handleInputChange} 
           />
