@@ -33,13 +33,30 @@ export const AgregarProductoPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    let newValue: string | number = value;
+    
+    if (name === 'precio_venta' || name === 'stock_actual') {
+      const numValue = parseFloat(value);
+      newValue = isNaN(numValue) || numValue < 0 ? 0 : numValue;
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: (name === 'precio_venta' || name === 'stock_actual') ? Number(value) : value
+      [name]: newValue
     }));
   };
 
   const handleSubmit = async () => {
+    if (formData.nombre.trim() === '') {
+      alert('Por favor, ingresa el nombre del producto.');
+      return;
+    }
+    
+    if (formData.precio_venta < 0 || formData.stock_actual < 0) {
+      alert('Los valores numéricos no pueden ser negativos.');
+      return;
+    }
+
     try {
       if (id) {
         await tiendaUseCases.actualizarProducto(Number(id), {
@@ -73,7 +90,7 @@ export const AgregarProductoPage: React.FC = () => {
             name="nombre"
             label="Nombre del producto" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{ shrink: true } as any}
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.nombre} 
@@ -84,7 +101,8 @@ export const AgregarProductoPage: React.FC = () => {
             label="Precio de venta" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{ shrink: true } as any}
+            inputProps={{ min: 0 } as any}
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.precio_venta} 
@@ -95,7 +113,8 @@ export const AgregarProductoPage: React.FC = () => {
             label="Stock Inicial" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{ shrink: true } as any}
+            inputProps={{ min: 0 } as any}
             fullWidth 
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.stock_actual} 

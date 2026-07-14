@@ -1,4 +1,4 @@
-import type { Producto, Venta } from '../entities/tienda';
+import type { Producto, Venta, DetalleVenta } from '../entities/tienda';
 
 export interface ITiendaRepository {
   getProductos(): Promise<Producto[]>;

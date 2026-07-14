@@ -17,7 +17,7 @@ export const NotificacionesPage: React.FC = () => {
         const productos = await tiendaRepository.getProductos();
         // Consideramos stock bajo si hay menos de 5 unidades
         const bajos = productos.filter(p => p.stock_actual < 5);
-        setAlertas(bajos);
+        setAlertas(bajos.map(p => ({ nombre: p.nombre, stock: p.stock_actual })));
       } catch (error) {
         console.error('Error cargando notificaciones:', error);
       } finally {

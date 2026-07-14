@@ -1,5 +1,5 @@
 import type { ITiendaRepository } from '../../domain/repositories/ITiendaRepository';
-import type { Producto, Venta } from '../../domain/entities/tienda';
+import type { Producto, Venta, DetalleVenta } from '../../domain/entities/tienda';
 
 export class TiendaUseCases {
   constructor(private tiendaRepository: ITiendaRepository) {}

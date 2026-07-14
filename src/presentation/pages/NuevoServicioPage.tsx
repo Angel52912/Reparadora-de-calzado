@@ -28,7 +28,7 @@ export const NuevoServicioPage: React.FC = () => {
         if (ticket) {
           setFormData({
             nombre_cliente: ticket.nombre_cliente,
-            telefono: ticket.telefono,
+            telefono: ticket.telefono ?? '',
             producto: ticket.producto,
             servicio_solicitado: ticket.servicio_solicitado,
             costo_mano_obra: ticket.costo_mano_obra,
@@ -42,32 +42,59 @@ export const NuevoServicioPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    let newValue: string | number = value;
+    
+    if (name === 'costo_mano_obra' || name === 'costo_materiales' || name === 'anticipo') {
+      const numValue = parseFloat(value);
+      newValue = isNaN(numValue) || numValue < 0 ? 0 : numValue;
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: (name === 'costo_mano_obra' || name === 'costo_materiales' || name === 'anticipo') ? Number(value) : value
+      [name]: newValue
     }));
   };
 
   const handleSubmit = async () => {
+    if (
+      formData.nombre_cliente.trim() === '' ||
+      formData.telefono.trim() === '' ||
+      formData.producto.trim() === '' ||
+      formData.servicio_solicitado.trim() === ''
+    ) {
+      alert('Por favor, completa todos los campos (Nombre, Teléfono, Producto, Servicio).');
+      return;
+    }
+    
+    if (formData.costo_mano_obra < 0 || formData.costo_materiales < 0 || formData.anticipo < 0) {
+      alert('Los valores numéricos no pueden ser negativos.');
+      return;
+    }
+
     try {
+      const manoObra = Number(formData.costo_mano_obra);
+      const materiales = Number(formData.costo_materiales);
       if (id) {
         await tallerUseCases.actualizarTicket(id, {
           nombre_cliente: formData.nombre_cliente,
           telefono: formData.telefono,
           producto: formData.producto,
           servicio_solicitado: formData.servicio_solicitado,
-          costo_mano_obra: Number(formData.costo_mano_obra),
-          costo_materiales: Number(formData.costo_materiales),
+          costo_mano_obra: manoObra,
+          costo_materiales: materiales,
           anticipo: Number(formData.anticipo)
         });
         alert('Ticket actualizado con éxito');
         navigate('/talabarteria/registro-servicios');
       } else {
         const ticketData = {
-          ...formData,
+          nombre_cliente: formData.nombre_cliente,
+          telefono: formData.telefono,
+          producto: formData.producto,
+          servicio_solicitado: formData.servicio_solicitado,
           estado: 'Recibido' as EstadoTicket,
-          costo_mano_obra: Number(formData.costo_mano_obra),
-          costo_materiales: Number(formData.costo_materiales),
+          costo_mano_obra: manoObra,
+          costo_materiales: materiales,
           anticipo: Number(formData.anticipo)
         };
         await tallerUseCases.crearTicket(ticketData);
@@ -132,6 +159,7 @@ export const NuevoServicioPage: React.FC = () => {
             type="number" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
+            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_mano_obra} 
@@ -143,6 +171,7 @@ export const NuevoServicioPage: React.FC = () => {
             type="number" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
+            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.costo_materiales} 
@@ -154,6 +183,7 @@ export const NuevoServicioPage: React.FC = () => {
             type="number" 
             variant="outlined" 
             InputLabelProps={{ shrink: true }}
+            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 3, '& .MuiInputLabel-root': { top: -4 } }}
             value={formData.anticipo} 

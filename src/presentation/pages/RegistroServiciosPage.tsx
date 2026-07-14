@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, CircularProgress, Paper, Chip, ButtonBase, IconButton } from '@mui/material';
+import { Box, Typography, Grid, CircularProgress, Paper, Chip, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
@@ -23,11 +23,11 @@ export const RegistroServiciosPage: React.FC = () => {
     });
   }, []);
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  const handleDelete = async (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
     if (window.confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
       try {
-        await tallerUseCases.eliminarTicket(id);
+        await tallerUseCases.eliminarTicket(String(id));
         setTickets(prev => prev.filter(t => t.id_servicio !== id));
       } catch (error) {
         alert('Error al eliminar el servicio: ' + error);

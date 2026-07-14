@@ -18,7 +18,7 @@ export class TallerRepository implements ITallerRepository {
     return data as TicketTaller;
   }
 
-  async createTicket(ticket: Omit<TicketTaller, 'id_servicio' | 'fecha_recepcion'>): Promise<TicketTaller> {
+  async createTicket(ticket: Omit<TicketTaller, 'id_servicio' | 'fecha_recepcion' | 'costo_total'>): Promise<TicketTaller> {
     const { data, error } = await supabase.from('taller_tickets').insert(ticket).select().single();
     if (error) throw error;
     return data as TicketTaller;
