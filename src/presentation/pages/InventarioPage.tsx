@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, CircularProgress, IconButton, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -31,6 +32,17 @@ export const InventarioPage: React.FC = () => {
       }
       return p;
     }));
+  };
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
+      try {
+        await tiendaUseCases.eliminarProducto(id);
+        setProductos(prev => prev.filter(p => p.id_producto !== id));
+      } catch (error) {
+        alert('Error al eliminar el producto: ' + error);
+      }
+    }
   };
 
   const guardarCambios = async () => {
@@ -64,6 +76,7 @@ export const InventarioPage: React.FC = () => {
                     <IconButton onClick={() => updateStockLocal(p.id_producto, -1)}><RemoveIcon /></IconButton>
                     <Typography sx={{ width: 30, textAlign: 'center' }}>{p.stock_actual}</Typography>
                     <IconButton onClick={() => updateStockLocal(p.id_producto, 1)}><AddIcon /></IconButton>
+                    <IconButton onClick={() => handleDelete(p.id_producto)} color="error"><DeleteIcon /></IconButton>
                   </Box>
                 </Box>
               </Grid>

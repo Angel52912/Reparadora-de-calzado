@@ -6,4 +6,5 @@ export interface ITallerRepository {
   createTicket(ticket: Omit<TicketTaller, 'id_servicio' | 'fecha_recepcion'>): Promise<TicketTaller>;
   updateEstadoTicket(id: string, nuevoEstado: EstadoTicket): Promise<void>;
   updateTicket(id: string, ticket: Partial<TicketTaller>): Promise<void>;
+  deleteTicket(id: string): Promise<void>;
 }

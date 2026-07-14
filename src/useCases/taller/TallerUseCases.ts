@@ -25,4 +25,8 @@ export class TallerUseCases {
   async actualizarTicket(id: string, ticket: Partial<TicketTaller>): Promise<void> {
     return this.tallerRepository.updateTicket(id, ticket);
   }
+
+  async eliminarTicket(id: string): Promise<void> {
+    return this.tallerRepository.deleteTicket(id);
+  }
 }

@@ -59,4 +59,8 @@ export class TiendaUseCases {
     );
     return historial;
   }
+
+  async eliminarProducto(id_producto: number): Promise<void> {
+    return this.tiendaRepository.deleteProducto(id_producto);
+  }
 }

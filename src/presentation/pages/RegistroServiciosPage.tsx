@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, CircularProgress, Paper, Chip, ButtonBase } from '@mui/material';
+import { Box, Typography, Grid, CircularProgress, Paper, Chip, ButtonBase, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
@@ -20,6 +21,18 @@ export const RegistroServiciosPage: React.FC = () => {
       setLoading(false);
     });
   }, []);
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (window.confirm('¿Estás seguro de que deseas eliminar este servicio?')) {
+      try {
+        await tallerUseCases.eliminarTicket(id);
+        setTickets(prev => prev.filter(t => t.id_servicio !== id));
+      } catch (error) {
+        alert('Error al eliminar el servicio: ' + error);
+      }
+    }
+  };
 
   const getStatusColor = (estado: string) => {
     switch (estado) {
@@ -46,7 +59,12 @@ export const RegistroServiciosPage: React.FC = () => {
                       <Typography sx={{ fontWeight: 600 }}>{t.producto} - {t.nombre_cliente}</Typography>
                       <Typography sx={{ fontSize: '13px', color: '#57423f' }}>{t.servicio_solicitado}</Typography>
                     </Box>
-                    <Chip label={t.estado} color={getStatusColor(t.estado) as any} size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Chip label={t.estado} color={getStatusColor(t.estado) as any} size="small" />
+                      <IconButton onClick={(e) => handleDelete(e, t.id_servicio)} color="error" size="small">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
                   </Paper>
                 </ButtonBase>
               </Grid>

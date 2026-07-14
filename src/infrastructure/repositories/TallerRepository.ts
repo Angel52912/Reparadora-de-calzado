@@ -33,4 +33,9 @@ export class TallerRepository implements ITallerRepository {
     const { error } = await supabase.from('taller_tickets').update(ticket).eq('id_servicio', id);
     if (error) throw error;
   }
+
+  async deleteTicket(id: string): Promise<void> {
+    const { error } = await supabase.from('taller_tickets').delete().eq('id_servicio', id);
+    if (error) throw error;
+  }
 }
