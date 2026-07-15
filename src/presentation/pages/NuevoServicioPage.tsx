@@ -4,14 +4,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
 import { TallerUseCases } from '../../useCases/taller/TallerUseCases';
+import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import type { EstadoTicket } from '../../domain/entities/taller';
 
 const tallerRepository = new TallerRepository();
 const tallerUseCases = new TallerUseCases(tallerRepository);
+const tiendaRepository = new TiendaRepository();
 
 export const NuevoServicioPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [formData, setFormData] = useState({
     nombre_cliente: '',
     telefono: '',
@@ -23,6 +26,11 @@ export const NuevoServicioPage: React.FC = () => {
   });
 
   useEffect(() => {
+    tiendaRepository.getProductos().then(productos => {
+      const lowStock = productos.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
+    });
+
     if (id) {
       tallerUseCases.getTicketById(id).then(ticket => {
         if (ticket) {
@@ -74,6 +82,8 @@ export const NuevoServicioPage: React.FC = () => {
     try {
       const manoObra = Number(formData.costo_mano_obra);
       const materiales = Number(formData.costo_materiales);
+      const total = manoObra + materiales;
+      
       if (id) {
         await tallerUseCases.actualizarTicket(id, {
           nombre_cliente: formData.nombre_cliente,
@@ -82,6 +92,7 @@ export const NuevoServicioPage: React.FC = () => {
           servicio_solicitado: formData.servicio_solicitado,
           costo_mano_obra: manoObra,
           costo_materiales: materiales,
+          costo_total: total,
           anticipo: Number(formData.anticipo)
         });
         alert('Ticket actualizado con éxito');
@@ -108,14 +119,19 @@ export const NuevoServicioPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title={id ? "Editar Servicio" : "Nuevo Servicio"} backHref="/talabarteria" homeHref="/" />
+      <Header 
+        title={id ? "Editar Servicio" : "Nuevo Servicio"} 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
         <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField 
             name="nombre_cliente"
             label="Nombre del cliente" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.nombre_cliente} 
@@ -125,7 +141,6 @@ export const NuevoServicioPage: React.FC = () => {
             name="telefono"
             label="Teléfono" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.telefono} 
@@ -135,7 +150,6 @@ export const NuevoServicioPage: React.FC = () => {
             name="producto"
             label="Producto" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.producto} 
@@ -145,7 +159,6 @@ export const NuevoServicioPage: React.FC = () => {
             name="servicio_solicitado"
             label="Servicio solicitado" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
             fullWidth
             multiline 
             rows={2} 
@@ -158,8 +171,6 @@ export const NuevoServicioPage: React.FC = () => {
             label="Costo mano obra" 
             type="number" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.costo_mano_obra} 
@@ -170,8 +181,6 @@ export const NuevoServicioPage: React.FC = () => {
             label="Costo materiales" 
             type="number" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.costo_materiales} 
@@ -182,8 +191,6 @@ export const NuevoServicioPage: React.FC = () => {
             label="Anticipo" 
             type="number" 
             variant="outlined" 
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: 0 }}
             fullWidth
             sx={{ mt: 4 }}
             value={formData.anticipo} 

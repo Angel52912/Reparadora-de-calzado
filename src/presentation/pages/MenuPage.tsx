@@ -15,18 +15,23 @@ const tallerUseCases = new TallerUseCases(tallerRepository);
 export const MenuPage: React.FC = () => {
   const [numSales, setNumSales] = useState<number | null>(null);
   const [activeServices, setActiveServices] = useState<number | null>(null);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sales = await tiendaUseCases.getProductos(); // Asumiendo que getProductos devuelve algo similar a ventas para el conteo
+        const sales = await tiendaUseCases.getProductos();
         setNumSales(sales.length);
 
         const services = await tallerUseCases.getTickets();
         const active = services.filter(s => s.estado !== 'Entregado').length;
         setActiveServices(active);
+
+        const productos = await tiendaRepository.getProductos();
+        const bajos = productos.filter(p => p.stock_actual < 5);
+        setNotificacionesCount(bajos.length);
       } catch (err) {
         setError('Error al cargar los datos.');
         console.error(err);
@@ -58,9 +63,8 @@ export const MenuPage: React.FC = () => {
       <Header 
         title="" 
         settingsHref="/ajustes" 
-        extraHref="/notificaciones" 
-        extraIcon="notifications" 
-        extraTitle="Notificaciones" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
       />
       <Box className="fade-in" sx={{ maxWidth: 768, mx: 'auto', width: '100%', pb: 28, px: 2 }}>
         <Box sx={{ textAlign: 'center', my: 5 }}>
@@ -72,7 +76,7 @@ export const MenuPage: React.FC = () => {
           </Typography>
         </Box>
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <Card
               to="/talabarteria"
               icon="construction"
@@ -84,7 +88,7 @@ export const MenuPage: React.FC = () => {
               ctaColor="#7d562d"
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <Card
               to="/tienda-abarrotes"
               icon="shopping_basket"
@@ -98,7 +102,7 @@ export const MenuPage: React.FC = () => {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <Box sx={{
               p: 2,
               textAlign: 'center',
@@ -113,7 +117,7 @@ export const MenuPage: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <Box sx={{
               p: 2,
               textAlign: 'center',

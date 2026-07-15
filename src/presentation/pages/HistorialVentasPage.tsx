@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, Chip } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -11,8 +12,15 @@ const tiendaUseCases = new TiendaUseCases(tiendaRepository);
 export const HistorialVentasPage: React.FC = () => {
   const [historial, setHistorial] = useState<{venta: Venta, detalles: DetalleVenta[]}[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    tiendaRepository.getProductos().then(productos => {
+      const lowStock = productos.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
+    });
+
     tiendaUseCases.getHistorialVentas().then(data => {
       setHistorial(data);
       setLoading(false);
@@ -21,7 +29,13 @@ export const HistorialVentasPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title="Historial de Ventas" backHref="/tienda-abarrotes" homeHref="/" />
+      <Header 
+        title="Historial de Ventas" 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>

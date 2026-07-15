@@ -12,12 +12,17 @@ export const VentasPage: React.FC = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [carrito, setCarrito] = useState<{producto: Producto, cantidad: number}[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
 
   useEffect(() => {
-    tiendaUseCases.getProductos().then(data => {
+    const fetchData = async () => {
+      const data = await tiendaUseCases.getProductos();
       setProductos(data);
+      const bajos = data.filter(p => p.stock_actual < 5);
+      setNotificacionesCount(bajos.length);
       setLoading(false);
-    });
+    };
+    fetchData();
   }, []);
 
   const addToCart = (producto: Producto) => {
@@ -78,18 +83,24 @@ export const VentasPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title="Nueva Venta" backHref="/tienda-abarrotes" homeHref="/" />
+      <Header 
+        title="Nueva Venta" 
+        backHref="/tienda-abarrotes" 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones"
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
         ) : (
           <Grid container spacing={2}>
             {/* Sección de Selección */}
-            <Grid size={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" sx={{ color: '#57423f', mb: 2 }}>Seleccionar Productos</Typography>
             </Grid>
             {productos.map(p => (
-              <Grid size={{ xs: 12, sm: 6 }} key={p.id_producto}>
+              <Grid item xs={12} sm={6} key={p.id_producto}>
                 <Box className="card" sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography sx={{ fontWeight: 600 }}>{p.nombre}</Typography>
@@ -101,7 +112,7 @@ export const VentasPage: React.FC = () => {
             ))}
 
             {/* Carrito */}
-            <Grid size={12} sx={{ mt: 4 }}>
+            <Grid item xs={12} sx={{ mt: 4 }}>
               <Typography variant="h6" sx={{ color: '#57423f', mb: 2 }}>Carrito</Typography>
               {carrito.map(item => (
                 <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

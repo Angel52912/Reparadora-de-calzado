@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, CircularProgress, Paper, Chip } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+// @ts-ignore
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+// @ts-ignore
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
@@ -10,6 +13,7 @@ const tiendaRepository = new TiendaRepository();
 export const NotificacionesPage: React.FC = () => {
   const [alertas, setAlertas] = useState<{nombre: string, stock: number}[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkStock = async () => {
@@ -29,7 +33,13 @@ export const NotificacionesPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title="Notificaciones" backHref="/" homeHref="/" />
+      <Header 
+        title="Notificaciones" 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={alertas.length}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>

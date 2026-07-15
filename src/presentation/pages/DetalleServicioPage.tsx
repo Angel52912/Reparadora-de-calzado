@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Paper, Chip, Select, MenuItem, FormControl, InputLabel, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, Paper, Select, MenuItem, FormControl, InputLabel, Button, CircularProgress } from '@mui/material';
 import { Header } from '../components/Header';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
 import { TallerUseCases } from '../../useCases/taller/TallerUseCases';
+import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import type { TicketTaller, EstadoTicket } from '../../domain/entities/taller';
 
 const tallerRepository = new TallerRepository();
 const tallerUseCases = new TallerUseCases(tallerRepository);
+const tiendaRepository = new TiendaRepository();
 
 export const DetalleServicioPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,8 +17,14 @@ export const DetalleServicioPage: React.FC = () => {
   const [ticket, setTicket] = useState<TicketTaller | null>(null);
   const [loading, setLoading] = useState(true);
   const [nuevoEstado, setNuevoEstado] = useState<EstadoTicket | ''>('');
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
 
   useEffect(() => {
+    tiendaRepository.getProductos().then(productos => {
+      const lowStock = productos.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
+    });
+    
     if (id) {
       tallerUseCases.getTicketById(id).then(data => {
         setTicket(data);
@@ -38,7 +46,13 @@ export const DetalleServicioPage: React.FC = () => {
 
   return (
     <Box>
-      <Header title="Detalle del Servicio" backHref="/talabarteria/registro-servicios" homeHref="/" />
+      <Header 
+        title="Detalle del Servicio" 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6">{ticket.producto}</Typography>

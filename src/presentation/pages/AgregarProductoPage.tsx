@@ -11,11 +11,19 @@ const tiendaUseCases = new TiendaUseCases(tiendaRepository);
 export const AgregarProductoPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [formData, setFormData] = useState({
     nombre: '',
     precio_venta: 0,
     stock_actual: 0
   });
+
+  useEffect(() => {
+    tiendaRepository.getProductos().then(productos => {
+      const lowStock = productos.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
+    });
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -82,7 +90,13 @@ export const AgregarProductoPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title={id ? "Editar Producto" : "Agregar Producto"} backHref="/tienda-abarrotes" homeHref="/" />
+      <Header 
+        title={id ? "Editar Producto" : "Agregar Producto"} 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
         <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography variant="h6" sx={{ color: '#8C261F', mb: 1 }}>Detalles del Producto</Typography>
@@ -90,7 +104,6 @@ export const AgregarProductoPage: React.FC = () => {
             name="nombre"
             label="Nombre del producto" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
             fullWidth 
             sx={{ mt: 4 }}
             value={formData.nombre} 
@@ -101,8 +114,6 @@ export const AgregarProductoPage: React.FC = () => {
             label="Precio de venta" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: 0 }}
             fullWidth 
             sx={{ mt: 4 }}
             value={formData.precio_venta} 
@@ -113,8 +124,6 @@ export const AgregarProductoPage: React.FC = () => {
             label="Stock Inicial" 
             type="number" 
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: 0 }}
             fullWidth 
             sx={{ mt: 4 }}
             value={formData.stock_actual} 

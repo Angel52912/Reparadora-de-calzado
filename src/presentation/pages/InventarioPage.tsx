@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, CircularProgress, IconButton, Button } from '@mui/material';
+// @ts-ignore
 import AddIcon from '@mui/icons-material/Add';
+// @ts-ignore
 import RemoveIcon from '@mui/icons-material/Remove';
+// @ts-ignore
 import DeleteIcon from '@mui/icons-material/Delete';
+// @ts-ignore
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
@@ -16,12 +20,15 @@ const tiendaUseCases = new TiendaUseCases(tiendaRepository);
 export const InventarioPage: React.FC = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [cambios, setCambios] = useState<Record<number, number>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
     tiendaUseCases.getProductos().then(data => {
       setProductos(data);
+      const lowStock = data.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
       setLoading(false);
     });
   }, []);
@@ -62,14 +69,20 @@ export const InventarioPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title="Inventario" backHref="/tienda-abarrotes" homeHref="/" />
+      <Header 
+        title="Inventario" 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
         ) : (
           <Grid container spacing={2}>
             {productos.map(p => (
-              <Grid size={{ xs: 12 }} key={p.id_producto}>
+              <Grid item xs={12} key={p.id_producto}>
                 <Box className="card" sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography sx={{ fontWeight: 600 }}>{p.nombre}</Typography>
@@ -85,7 +98,7 @@ export const InventarioPage: React.FC = () => {
                 </Box>
               </Grid>
             ))}
-            <Grid size={12} sx={{ mt: 2 }}>
+            <Grid item xs={12} sx={{ mt: 2 }}>
               <Button 
                 variant="contained" 
                 fullWidth 

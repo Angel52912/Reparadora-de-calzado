@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Switch, FormControlLabel, Paper, Divider } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
+import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
+// @ts-ignore
 import SettingsIcon from '@mui/icons-material/Settings';
+// @ts-ignore
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
+const tiendaRepository = new TiendaRepository();
+
 export const AjustesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
+
+  useEffect(() => {
+    tiendaRepository.getProductos().then(productos => {
+      const lowStock = productos.filter(p => p.stock_actual < 5).length;
+      setNotificacionesCount(lowStock);
+    });
+  }, []);
 
   useEffect(() => {
     const savedPreference = localStorage.getItem('notifications_enabled');
@@ -22,7 +37,13 @@ export const AjustesPage: React.FC = () => {
 
   return (
     <Box className="fade-in">
-      <Header title="Ajustes" backHref="/" homeHref="/" />
+      <Header 
+        title="Ajustes" 
+        onBack={() => navigate(-1)} 
+        settingsHref="/ajustes" 
+        notificacionesHref="/notificaciones" 
+        notificacionesCount={notificacionesCount}
+      />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         <Paper className="card" sx={{ p: 3, borderRadius: '12px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>

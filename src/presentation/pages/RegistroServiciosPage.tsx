@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, CircularProgress, Paper, Chip, IconButton } from '@mui/material';
+// @ts-ignore
 import DeleteIcon from '@mui/icons-material/Delete';
+// @ts-ignore
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
@@ -53,7 +55,7 @@ export const RegistroServiciosPage: React.FC = () => {
         ) : (
           <Grid container spacing={2}>
             {tickets.map(t => (
-              <Grid size={{ xs: 12 }} key={t.id_servicio}>
+              <Grid item xs={12} key={t.id_servicio}>
                 <Paper className="card" sx={{ p: 0 }}>
                   <Box onClick={() => navigate(`/talabarteria/servicio/${t.id_servicio}`)} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
                     <Box>
