@@ -55,6 +55,9 @@ export const NuevoServicioPage: React.FC = () => {
     if (name === 'costo_mano_obra' || name === 'costo_materiales' || name === 'anticipo') {
       const numValue = parseFloat(value);
       newValue = isNaN(numValue) || numValue < 0 ? 0 : numValue;
+    } else if (name === 'telefono') {
+      // Remove non-numeric characters and limit to 10 digits
+      newValue = value.replace(/\D/g, '').slice(0, 10);
     }
     
     setFormData(prev => ({
