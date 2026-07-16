@@ -6,7 +6,6 @@ import { TiendaRepository } from '../../infrastructure/repositories/TiendaReposi
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
 import type { Venta, DetalleVenta } from '../../domain/entities/tienda';
 import PrintIcon from '@mui/icons-material/Print';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const tiendaRepository = new TiendaRepository();
 const tiendaUseCases = new TiendaUseCases(tiendaRepository);
@@ -55,14 +54,15 @@ export const HistorialVentasPage: React.FC = () => {
           }
         `}
       </style>
-      <Header 
-        className="no-print"
-        title="Historial de Ventas" 
-        onBack={() => navigate(-1)} 
-        settingsHref="/ajustes" 
-        notificacionesHref="/notificaciones" 
-        notificacionesCount={notificacionesCount}
-      />
+      <Box className="no-print">
+        <Header 
+          title="Historial de Ventas" 
+          onBack={() => navigate(-1)} 
+          settingsHref="/ajustes" 
+          notificacionesHref="/notificaciones" 
+          notificacionesCount={notificacionesCount}
+        />
+      </Box>
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         <Box className="no-print" sx={{ display: 'flex', gap: 1, mb: 3, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField 
