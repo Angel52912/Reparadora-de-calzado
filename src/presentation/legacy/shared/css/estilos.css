@@ -1,72 +1,244 @@
 /* ==========================================================
    ESTILOS GLOBALES · Heritage Service Utility
    Usados por: Menú, Talabartería y Tienda de Abarrotes
+   Actualizado según pautas de aiuda.md
    ========================================================== */
-:root{
-  --primary:#8C261F;
-  --primary-dark:#6c0d0b;
-  --secondary:#D4A373;
-  --bg:#FEF9F0;
-  --ink:#2B2B2B;
-  --ink-soft:#57423f;
-  --border:#D4A373;
-  --success:#2e7d32;
-  --error:#ba1a1a;
+
+/* ── TIPOGRAFÍAS ── */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --primary:       #8C261F;
+  --primary-dark:  #6c0d0b;
+  --secondary:     #D4A373;
+  --bg:            #FEF9F0;
+  --ink:           #202020;
+  --ink-soft:      #57423f;
+  --border:        #D4A373;
+  --success:       #2e7d32;
+  --error:         #ba1a1a;
+  --radius-card:   16px;
+  --shadow-card:   0 4px 20px rgba(0,0,0,0.05);
+  --shadow-hover:  0 8px 28px rgba(0,0,0,0.11);
+  --transition:    0.2s ease;
 }
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:'Work Sans',sans-serif;
-  margin:0;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Work Sans', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
-.material-symbols-outlined{
-  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
-  vertical-align:middle;
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #8b716e55; border-radius: 10px; }
+
+/* ── FOCO ACCESIBLE (A11Y) ── */
+:focus-visible {
+  outline: 2.5px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
-.fill{ font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24; }
-::-webkit-scrollbar{ width:6px; }
-::-webkit-scrollbar-thumb{ background:#8b716e55; border-radius:10px; }
-.tap:active{ transform:scale(0.97); }
-.card{
-  background:#fff;
-  border:1px solid #D4A37333;
-  border-radius:0.75rem;
-  box-shadow:0 4px 12px rgba(43,43,43,0.06);
+
+/* ── ÍCONOS MATERIAL ── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
 }
-.btn-primary{
-  background:var(--primary); color:#fff; border-radius:9999px;
-  font-weight:600; transition:filter .15s, transform .1s;
+.fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+
+/* ── TARJETAS ── */
+.card {
+  background: #fff;
+  border: 1px solid #D4A37333;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition), transform var(--transition);
 }
-.btn-primary:hover{ filter:brightness(1.08); }
-.btn-secondary{
-  background:var(--secondary); color:var(--ink); border-radius:9999px; font-weight:600;
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
-.btn-ghost{
-  background:transparent; border:1px solid #2B2B2B33; color:var(--ink-soft); border-radius:9999px; font-weight:600;
+
+/* ── TAP FEEDBACK ── */
+.tap:active { transform: scale(0.97); }
+
+/* ── BOTONES ── */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-family: 'Work Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+  transition: filter var(--transition), transform 0.1s;
 }
-input[type=text], input[type=number], input[type=date], select, textarea{
-  width:100%; background:#fff; border:1px solid #2B2B2B; border-radius:0.5rem;
-  padding:12px 14px; font-family:'Work Sans'; font-size:16px; color:var(--ink);
+.btn-primary:hover  { filter: brightness(1.08); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--ink);
+  border-radius: 9999px;
+  font-weight: 600;
+  font-family: 'Work Sans', sans-serif;
+  min-height: 44px;
+  min-width: 44px;
 }
-input:focus, select:focus, textarea:focus{
-  outline:none; border-color:var(--primary); border-width:2px; padding:11px 13px;
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #2B2B2B33;
+  color: var(--ink-soft);
+  border-radius: 9999px;
+  font-weight: 600;
+  min-height: 44px;
+  min-width: 44px;
 }
-label{ font-size:14px; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:6px; }
-.badge{ font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:4px 10px; border-radius:9999px; }
-.badge-progress{ background:#FFE9E6; color:var(--primary); }
-.badge-ready{ background:#DDF3DD; color:var(--success); }
-.badge-delivered{ background:#eee; color:#666; }
-.toggle{ position:relative; width:46px; height:26px; flex-shrink:0; }
-.toggle input{ opacity:0; width:0; height:0; }
-.toggle .track{ position:absolute; inset:0; background:#ddd; border-radius:9999px; transition:.2s; cursor:pointer; }
-.toggle .track:before{ content:""; position:absolute; height:20px; width:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.3);}
-.toggle input:checked + .track{ background:var(--primary); }
-.toggle input:checked + .track:before{ transform:translateX(20px); }
-.modal-backdrop{ position:fixed; inset:0; background:rgba(36,25,23,.45); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; padding:20px; z-index:100; }
-.fade-in{ animation:fadeIn .25s ease; }
-@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
-.stepper button{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; }
+
+/* ── CAMPOS DE FORMULARIO ── */
+input[type=text],
+input[type=number],
+input[type=date],
+select,
+textarea {
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid #2B2B2B44;
+  border-radius: 0.625rem;
+  padding: 12px 14px;
+  font-family: 'Work Sans';
+  font-size: 16px;
+  color: var(--ink);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(140,38,31,0.12);
+  padding: 11px 13px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ── BADGES ── */
+.badge { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 9999px; }
+.badge-progress  { background: #FFE9E6; color: var(--primary); }
+.badge-ready     { background: #DDF3DD; color: var(--success); }
+.badge-delivered { background: #eee; color: #666; }
+
+/* ── TOGGLE ── */
+.toggle { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle .track { position: absolute; inset: 0; background: #ddd; border-radius: 9999px; transition: .2s; cursor: pointer; }
+.toggle .track:before { content: ""; position: absolute; height: 20px; width: 20px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.toggle input:checked + .track { background: var(--primary); }
+.toggle input:checked + .track:before { transform: translateX(20px); }
+
+/* ── MODAL ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(36,25,23,.45); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+
+/* ── ANIMACIONES ── */
+.fade-in { animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Entrada escalonada para grids de tarjetas */
+.fade-in-stagger > *:nth-child(1) { animation: fadeIn .3s ease 0.05s both; }
+.fade-in-stagger > *:nth-child(2) { animation: fadeIn .3s ease 0.10s both; }
+.fade-in-stagger > *:nth-child(3) { animation: fadeIn .3s ease 0.15s both; }
+.fade-in-stagger > *:nth-child(4) { animation: fadeIn .3s ease 0.20s both; }
+.fade-in-stagger > *:nth-child(n+5) { animation: fadeIn .3s ease 0.25s both; }
+
+/* ── SPLASH SCREEN ── */
+@keyframes splash-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 8px 32px rgba(140,38,31,0.25); }
+  50%      { transform: scale(1.06); box-shadow: 0 12px 40px rgba(140,38,31,0.35); }
+}
+@keyframes splash-bar {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(150%); }
+  100% { transform: translateX(350%); }
+}
+
+/* Toast animation */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── SKELETON SHIMMER ── */
+.skeleton-line {
+  background: linear-gradient(90deg, #f0ece8 25%, #e8e2dc 50%, #f0ece8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── STEPPER ── */
+.stepper button { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
+
+/* ── BANNER SIN CONEXIÓN ── */
+.offline-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9998;
+  background: #7f1d1d;
+  color: #fff;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* ── IMPRESIÓN ── */
+@media print {
+  .no-print { display: none !important; }
+
+  /* Ocultar: header, nav, sidebar, botones de acción */
+  header,
+  nav,
+  aside,
+  [class*="MuiAppBar"],
+  [class*="MuiBottomNavigation"],
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    padding: 20px !important;
+  }
+
+  .card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  a[href]::after { content: " (" attr(href) ")"; font-size: 11px; color: #555; }
+}

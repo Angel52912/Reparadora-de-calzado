@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, CircularProgress } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
+import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
+import { useToast } from '../context/ToastContext';
+import { useSplash } from '../context/SplashContext';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -18,6 +21,8 @@ export const MenuPage: React.FC = () => {
   const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { showToast } = useToast();
+  const { hideSplash } = useSplash();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,10 +38,13 @@ export const MenuPage: React.FC = () => {
         const bajos = productos.filter(p => p.stock_actual < 5);
         setNotificacionesCount(bajos.length);
       } catch (err) {
-        setError('Error al cargar los datos.');
-        console.error(err);
+        const msg = 'Error al cargar los datos. Verifica tu conexión.';
+        setError(msg);
+        showToast(msg, 'error');
+        console.error('[MenuPage] fetchData error:', err);
       } finally {
         setLoading(false);
+        hideSplash();
       }
     };
     fetchData();
@@ -44,17 +52,20 @@ export const MenuPage: React.FC = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
+      <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pt: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <SkeletonCard lines={2} />
+        <SkeletonCard lines={2} />
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Box>
+      <EmptyState
+        icon="⚠️"
+        title="No pudimos cargar los datos"
+        subtitle={error}
+      />
     );
   }
 
@@ -75,7 +86,7 @@ export const MenuPage: React.FC = () => {
             ¿A qué sistema desea ingresar?
           </Typography>
         </Box>
-        <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid container spacing={2} sx={{ mb: 4 }} className="fade-in-stagger">
           <Grid item xs={12} sm={6}>
             <Card
               to="/talabarteria"

@@ -4,12 +4,79 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reparadora de Calzado y Abarrotes</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- SEO -->
+    <title>Reparadora de Calzado | Taller Artesanal</title>
+    <meta name="description" content="Servicio profesional de reparación y restauración de calzado artesanal. Agenda tu cita o visítanos en el taller. También manejamos tienda de abarrotes." />
+    <meta name="theme-color" content="#8C261F" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph (redes sociales) -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content="Reparadora de Calzado | Taller Artesanal" />
+    <meta property="og:description" content="Reparación y restauración artesanal de calzado. Agenda tu cita o visítanos." />
+    <meta property="og:locale"      content="es_MX" />
+
+    <!-- Tipografías: Work Sans + Quicksand (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <!-- Splash screen: fuera de #root para no heredar estilos flex del CSS -->
+    <div id="splash" style="
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #FEF9F0;
+      font-family: 'Work Sans', system-ui, sans-serif;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    ">
+      <div style="
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8C261F 0%, #C0522A 100%);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 8px 32px rgba(140, 38, 31, 0.25);
+        animation: splash-pulse 2s ease-in-out infinite;
+        margin-bottom: 24px;
+      ">
+        <span class="material-symbols-outlined fill" style="
+          font-size: 36px; color: #fff; user-select: none;
+        ">handyman</span>
+      </div>
+      <h1 style="
+        margin: 0; font-size: 22px; font-weight: 700;
+        color: #202020; letter-spacing: -0.3px;
+        font-family: 'Work Sans', system-ui, sans-serif;
+      ">Reparadora de Calzado</h1>
+      <p style="
+        margin: 6px 0 0; font-size: 13px; font-weight: 500;
+        color: #9a7b6f; letter-spacing: 0.04em;
+      ">Taller Artesanal &amp; Tendejón</p>
+      <div style="
+        margin-top: 36px; width: 160px; height: 3px;
+        background: rgba(212, 163, 115, 0.25);
+        border-radius: 9999px; overflow: hidden;
+      ">
+        <div style="
+          width: 40%; height: 100%;
+          background: linear-gradient(90deg, #8C261F, #C0522A);
+          border-radius: 9999px;
+          animation: splash-bar 1.4s ease-in-out infinite;
+        "></div>
+      </div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

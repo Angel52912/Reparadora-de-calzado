@@ -3,6 +3,7 @@ import { Box, Typography, CircularProgress, Button, Grid } from '@mui/material';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { useToast } from '../context/ToastContext';
 import type { Producto } from '../../domain/entities/tienda';
 
 const tiendaRepository = new TiendaRepository();
@@ -13,6 +14,7 @@ export const VentasPage: React.FC = () => {
   const [carrito, setCarrito] = useState<{producto: Producto, cantidad: number}[]>([]);
   const [loading, setLoading] = useState(true);
   const [notificacionesCount, setNotificacionesCount] = useState(0);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,13 +73,14 @@ export const VentasPage: React.FC = () => {
   const registrarVenta = async () => {
     try {
       await tiendaUseCases.registrarVenta({ total: totalVenta }, carrito);
-      alert('Venta registrada con éxito');
+      showToast('Venta registrada con éxito ✓', 'success');
       setCarrito([]);
       // Recargar productos para actualizar stock
       const nuevosProductos = await tiendaUseCases.getProductos();
       setProductos(nuevosProductos);
     } catch (error) {
-      alert('Error al registrar la venta: ' + error);
+      showToast('Error al registrar la venta. Intenta de nuevo.', 'error');
+      console.error('[VentasPage] Error al registrar venta:', error);
     }
   };
 
