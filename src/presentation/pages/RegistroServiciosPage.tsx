@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Box, Typography, Paper, IconButton,
-  Checkbox, Tooltip, Collapse, Fab,
+  Checkbox, Tooltip, Collapse, Fab, TextField, InputAdornment,
 } from '@mui/material';
 import { COLORS } from '../../presentation/context/theme';
 // @ts-ignore
@@ -12,6 +12,8 @@ import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import FilterListIcon from '@mui/icons-material/FilterList';
 // @ts-ignore
 import AddIcon from '@mui/icons-material/Add';
+// @ts-ignore
+import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
@@ -174,6 +176,7 @@ export const RegistroServiciosPage: React.FC = () => {
   const [tickets, setTickets]               = useState<TicketTaller[]>([]);
   const [loading, setLoading]               = useState(true);
   const [filtroEstado, setFiltroEstado]     = useState<EstadoTicket | 'Todos'>('Todos');
+  const [busqueda, setBusqueda]             = useState('');
   const [modoSeleccion, setModoSeleccion]   = useState(false);
   const [seleccionados, setSeleccionados]   = useState<Set<number>>(new Set());
   const [notificacionesCount, setNotificacionesCount] = useState(0);
@@ -186,6 +189,9 @@ export const RegistroServiciosPage: React.FC = () => {
       const ordenados = [...data].sort((a, b) => b.id_servicio - a.id_servicio);
       setTickets(ordenados);
       setLoading(false);
+    }).catch(e => {
+      console.error(e);
+      setLoading(false);
     });
   };
 
@@ -197,9 +203,16 @@ export const RegistroServiciosPage: React.FC = () => {
   }, []);
 
   const ticketsFiltrados = useMemo(() => {
-    if (filtroEstado === 'Todos') return tickets;
-    return tickets.filter(t => t.estado === filtroEstado);
-  }, [tickets, filtroEstado]);
+    let filtrados = tickets;
+    if (filtroEstado !== 'Todos') {
+      filtrados = filtrados.filter(t => t?.estado === filtroEstado);
+    }
+    if (busqueda.trim() !== '') {
+      const b = busqueda.toLowerCase();
+      filtrados = filtrados.filter(t => t?.nombre_cliente?.toLowerCase().includes(b));
+    }
+    return filtrados;
+  }, [tickets, filtroEstado, busqueda]);
 
   const toggleSeleccion = (id: number) => {
     setSeleccionados(prev => {
@@ -238,53 +251,64 @@ export const RegistroServiciosPage: React.FC = () => {
 
       <Box sx={{ maxWidth: 768, mx: 'auto', px: 2, pt: 1.5, pb: 12 }}>
 
-        {/* ── Barra compacta: filtro + basura ── */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+        {/* ── Barra compacta: filtro + buscador + acciones ── */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
           <FiltroSelector
             value={filtroEstado}
             tickets={tickets}
             onChange={setFiltroEstado}
           />
+          
+          <TextField
+            size="small"
+            placeholder="Buscar cliente..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            sx={{
+              flex: 1,
+              '& .MuiOutlinedInput-root': { borderRadius: 9999, height: 36, bgcolor: '#fff' }
+            }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start"><SearchIcon fontSize="small" /></InputAdornment>,
+            }}
+          />
 
-          {/* Acciones de selección */}
-          <Collapse in={modoSeleccion} orientation="horizontal">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography sx={{ fontSize: 12, color: COLORS.inkSecondary, px: 0.5 }}>
-                {seleccionados.size} sel.
-              </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            {/* Acciones de selección */}
+            <Collapse in={modoSeleccion} orientation="horizontal">
               <Tooltip title="Cancelar">
                 <IconButton size="small" onClick={cancelarSeleccion} sx={{ color: COLORS.inkTertiary }}>
                   <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
                 </IconButton>
               </Tooltip>
-            </Box>
-          </Collapse>
+            </Collapse>
 
-          {/* Botón de papelera */}
-          <Tooltip title={modoSeleccion
-            ? seleccionados.size > 0 ? `Eliminar ${seleccionados.size}` : 'Selecciona elementos'
-            : 'Seleccionar para eliminar'
-          }>
-            <span>
-              <IconButton
-                size="small"
-                onClick={modoSeleccion ? (seleccionados.size > 0 ? eliminarSeleccionados : undefined) : activarModoSeleccion}
-                sx={{
-                  color: modoSeleccion && seleccionados.size > 0 ? COLORS.error : COLORS.inkSecondary,
-                  opacity: modoSeleccion && seleccionados.size === 0 ? 0.4 : 1,
-                  border: '1px solid',
-                  borderColor: modoSeleccion && seleccionados.size > 0 ? `${COLORS.error}33` : COLORS.border,
-                  borderRadius: 1.5,
-                  p: 0.5,
-                  transition: 'all 0.18s ease',
-                }}
-              >
-                {modoSeleccion
-                  ? <DeleteIcon sx={{ fontSize: 18 }} />
-                  : <DeleteSweepIcon sx={{ fontSize: 18 }} />}
-              </IconButton>
-            </span>
-          </Tooltip>
+            {/* Botón de papelera */}
+            <Tooltip title={modoSeleccion
+              ? seleccionados.size > 0 ? `Eliminar ${seleccionados.size}` : 'Selecciona elementos'
+              : 'Seleccionar para eliminar'
+            }>
+              <span>
+                <IconButton
+                  size="small"
+                  onClick={modoSeleccion ? (seleccionados.size > 0 ? eliminarSeleccionados : undefined) : activarModoSeleccion}
+                  sx={{
+                    color: modoSeleccion && seleccionados.size > 0 ? COLORS.error : COLORS.inkSecondary,
+                    opacity: modoSeleccion && seleccionados.size === 0 ? 0.4 : 1,
+                    border: '1px solid',
+                    borderColor: modoSeleccion && seleccionados.size > 0 ? `${COLORS.error}33` : COLORS.border,
+                    borderRadius: 1.5,
+                    p: 0.5,
+                    transition: 'all 0.18s ease',
+                  }}
+                >
+                  {modoSeleccion
+                    ? <DeleteIcon sx={{ fontSize: 18 }} />
+                    : <DeleteSweepIcon sx={{ fontSize: 18 }} />}
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
         </Box>
 
         {/* ── Lista ── */}
