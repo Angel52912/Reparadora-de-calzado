@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, TextField, Button, IconButton } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper, TextField, Button, IconButton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
@@ -7,6 +7,7 @@ import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
 import { COLORS } from '../context/theme';
 import type { Venta, DetalleVenta } from '../../domain/entities/tienda';
 import PrintIcon from '@mui/icons-material/Print';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const tiendaRepository = new TiendaRepository();
 const tiendaUseCases = new TiendaUseCases(tiendaRepository);
@@ -21,7 +22,6 @@ export const HistorialVentasPage: React.FC = () => {
 
   const fetchHistorial = async (start: string, end: string) => {
     setLoading(true);
-    // Pass raw YYYY-MM-DD strings, TiendaRepository will append time components
     const data = await tiendaUseCases.getHistorialVentasByDateRange(start, end);
     setHistorial(data);
     setLoading(false);
@@ -58,7 +58,7 @@ export const HistorialVentasPage: React.FC = () => {
       <Box className="no-print">
         <Header 
           title="Historial de Ventas" 
-          onBack={() => navigate(-1)} 
+          backHref="/tienda-abarrotes" 
           settingsHref="/ajustes" 
           notificacionesHref="/notificaciones" 
           notificacionesCount={notificacionesCount}
@@ -90,32 +90,36 @@ export const HistorialVentasPage: React.FC = () => {
         ) : historial.length === 0 ? (
           <Typography sx={{ textAlign: 'center', mt: 5, color: COLORS.inkSecondary }}>No hay ventas registradas en este rango.</Typography>
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {historial.map(({ venta, detalles }) => (
-              <Paper key={venta.id_venta} className="card" sx={{ p: 3, borderRadius: '12px' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography sx={{ fontWeight: 'bold', color: COLORS.primary }}>
-                    Venta #{venta.id_venta}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: COLORS.inkTertiary }}>
-                    {new Date(venta.fecha_venta).toLocaleString()}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
-                  {detalles.map(d => (
-                    <Box key={d.id_detalle} sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                      <Typography>{d.nombre_producto || `Producto #${d.id_producto}`} x {d.cantidad}</Typography>
-                      <Typography>${d.subtotal.toFixed(2)}</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {historial.map(({ venta, detalles }) => {
+              const fecha = new Date(venta.fecha_venta);
+              return (
+                <Accordion key={venta.id_venta} elevation={0} sx={{ border: `1px solid ${COLORS.border}`, borderRadius: '12px !important', '&:before': { display: 'none' } }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', pr: 2 }}>
+                      <Typography sx={{ fontWeight: 'bold', color: COLORS.primary }}>Venta #{venta.id_venta}</Typography>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography variant="body2">{fecha.toLocaleDateString()} · {fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Typography>
+                        <Typography sx={{ fontWeight: 'bold' }}>${venta.total.toFixed(2)}</Typography>
+                      </Box>
                     </Box>
-                  ))}
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: `1px solid ${COLORS.border}`, pt: 1 }}>
-                  <Typography sx={{ fontWeight: 'bold', fontSize: '18px', color: COLORS.ink }}>
-                    Total: ${venta.total.toFixed(2)}
-                  </Typography>
-                </Box>
-              </Paper>
-            ))}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box sx={{ pt: 1, borderTop: `1px solid ${COLORS.border}` }}>
+                      {detalles.map(d => (
+                        <Box key={d.id_detalle} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5, fontSize: '14px' }}>
+                          <Typography>{d.nombre_producto || `Producto #${d.id_producto}`} x {d.cantidad}</Typography>
+                          <Typography>${d.subtotal.toFixed(2)}</Typography>
+                        </Box>
+                      ))}
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: `1px solid ${COLORS.border}`, pt: 1, mt: 1 }}>
+                        <Typography sx={{ fontWeight: 'bold', color: COLORS.ink }}>Total: ${venta.total.toFixed(2)}</Typography>
+                      </Box>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })}
           </Box>
         )}
       </Box>

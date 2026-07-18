@@ -29,6 +29,11 @@ export const VentasPage: React.FC = () => {
   }, []);
 
   const addToCart = (producto: Producto) => {
+    if (producto.stock_actual <= 0) {
+      showToast('No hay existencias disponibles de este producto.', 'error');
+      return;
+    }
+
     setCarrito(prev => {
       const existing = prev.find(item => item.producto.id_producto === producto.id_producto);
       
@@ -40,14 +45,13 @@ export const VentasPage: React.FC = () => {
             : item
           );
         }
-        // Si ya alcanzó el stock, no hacemos nada más que avisar
+        // Si ya alcanzó el stock, avisamos
+        showToast('Se alcanzó el límite de existencias.', 'warning');
         return prev;
       }
       
-      // Si no existe, agregamos solo si hay stock
-      return producto.stock_actual > 0 
-        ? [...prev, { producto, cantidad: 1 }] 
-        : prev;
+      // Si no existe, agregamos
+      return [...prev, { producto, cantidad: 1 }];
     });
   };
 
@@ -105,12 +109,23 @@ export const VentasPage: React.FC = () => {
             </Grid>
             {productos.map(p => (
               <Grid item xs={12} sm={6} key={p.id_producto}>
-                <Box className="card" sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box 
+                  className="card" 
+                  onClick={() => addToCart(p)}
+                  sx={{ 
+                    p: 2, 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    '&:hover': { borderColor: COLORS.primary }
+                  }}
+                >
                   <Box>
                     <Typography sx={{ fontWeight: 600 }}>{p.nombre}</Typography>
                     <Typography sx={{ fontSize: '14px' }}>Stock: {p.stock_actual}</Typography>
                   </Box>
-                  <Button className="btn-secondary" onClick={() => addToCart(p)}>Agregar</Button>
+                  <Typography sx={{ fontWeight: 600 }}>${p.precio_venta.toFixed(2)}</Typography>
                 </Box>
               </Grid>
             ))}
@@ -119,13 +134,27 @@ export const VentasPage: React.FC = () => {
             <Grid item xs={12} sx={{ mt: 4 }}>
               <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Carrito</Typography>
               {carrito.map(item => (
-                <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography>{item.producto.nombre} x {item.cantidad}</Typography>
-                  <Box>
-                    <Button size="small" onClick={() => removeFromCart(item.producto)}>-</Button>
-                    <Button size="small" onClick={() => addToCart(item.producto)}>+</Button>
+                <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+                  <Typography sx={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {item.producto.nombre} x {item.cantidad}
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
+                    <Button 
+                      variant="outlined" 
+                      size="small" 
+                      onClick={() => removeFromCart(item.producto)}
+                      sx={{ minWidth: 32, p: 0.5, borderColor: COLORS.inkTertiary, color: COLORS.inkTertiary }}
+                    >-</Button>
+                    <Button 
+                      variant="contained" 
+                      size="small" 
+                      onClick={() => addToCart(item.producto)}
+                      sx={{ minWidth: 32, p: 0.5, background: COLORS.primary, color: '#fff' }}
+                    >+</Button>
                   </Box>
-                  <Typography>${(item.producto.precio_venta * item.cantidad).toFixed(2)}</Typography>
+                  <Typography sx={{ width: 60, textAlign: 'right', flexShrink: 0 }}>
+                    ${(item.producto.precio_venta * item.cantidad).toFixed(2)}
+                  </Typography>
                 </Box>
               ))}
               <Box sx={{ mt: 2, textAlign: 'right' }}>
