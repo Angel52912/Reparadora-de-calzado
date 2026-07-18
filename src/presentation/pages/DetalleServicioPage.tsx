@@ -69,7 +69,6 @@ const EstadoStepper = ({
           const s = STATUS_STYLE[e];
           const activo   = estadoActual === e;
           const completado = !esAbandonado && idxActual > idx;
-          const futuro   = !activo && !completado;
 
           return (
             <React.Fragment key={e}>
@@ -269,8 +268,8 @@ export const DetalleServicioPage: React.FC = () => {
 
   const estadoStyle = STATUS_STYLE[ticket.estado];
   const restante    = ticket.costo_total - ticket.anticipo;
-  const fechaTexto  = ticket.fecha_ingreso
-    ? new Date(ticket.fecha_ingreso).toLocaleDateString('es-MX', {
+  const fechaTexto  = ticket.fecha_recepcion
+    ? new Date(ticket.fecha_recepcion).toLocaleDateString('es-MX', {
         day: '2-digit', month: 'long', year: 'numeric',
       })
     : '—';

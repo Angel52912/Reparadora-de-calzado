@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, TextField, Button, IconButton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography, CircularProgress, TextField, Button, IconButton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -18,7 +17,6 @@ export const HistorialVentasPage: React.FC = () => {
   const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
-  const navigate = useNavigate();
 
   const fetchHistorial = async (start: string, end: string) => {
     setLoading(true);

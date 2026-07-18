@@ -185,7 +185,6 @@ export const InventarioPage: React.FC = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [loading, setLoading] = useState(true);
   const [notificacionesCount, setNotificacionesCount] = useState(0);
-  const [cambios, setCambios] = useState<Record<number, number>>({});
   const [busqueda, setBusqueda] = useState('');
 
   const [filtroEstado, setFiltroEstado] = useState<EstadoStock | 'Todos'>('Todos');
@@ -225,41 +224,6 @@ export const InventarioPage: React.FC = () => {
     }
     return filtrados;
   }, [productos, filtroEstado, busqueda]);
-
-  const updateStockLocal = (id: number, delta: number) => {
-    setProductos(prev => prev.map(p => {
-      if (p.id_producto === id) {
-        const nuevoStock = Math.max(0, p.stock_actual + delta);
-        setCambios(c => ({ ...c, [id]: nuevoStock }));
-        return { ...p, stock_actual: nuevoStock };
-      }
-      return p;
-    }));
-  };
-
-  const handleDelete = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
-      try {
-        await tiendaUseCases.eliminarProducto(id);
-        setProductos(prev => prev.filter(p => p.id_producto !== id));
-        showToast('Producto eliminado del inventario.', 'success');
-      } catch (error) {
-        showToast('Error al eliminar el producto. Intenta de nuevo.', 'error');
-      }
-    }
-  };
-
-  const guardarCambios = async () => {
-    try {
-      for (const [id, nuevoStock] of Object.entries(cambios)) {
-        await tiendaRepository.updateStock(Number(id), nuevoStock);
-      }
-      setCambios({});
-      showToast('Stock actualizado con éxito ✓', 'success');
-    } catch (error) {
-      showToast('Error al guardar cambios. Intenta de nuevo.', 'error');
-    }
-  };
 
   const toggleSeleccion = (id: number) => {
     setSeleccionados(prev => {
