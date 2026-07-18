@@ -16,7 +16,7 @@ export const COLORS = {
   secondaryLight:  '#D4A373',
   secondarySubtle: '#FEF9F0',
 
-  bg:        '#FAFAF9',
+  bg:        '#F5EDE3',
   surface:   '#FFFFFF',
 
   ink:         '#1A1210',

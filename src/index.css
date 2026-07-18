@@ -8,7 +8,7 @@
   font: 15px/1.55 var(--sans);
   letter-spacing: 0.01em;
   color: #1A1210;
-  background: #FAFAF9;
+  background: #F5EDE3;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -27,7 +27,7 @@
 
 body {
   margin: 0;
-  background: #FAFAF9;
+  background: #F5EDE3;
 }
 
 h1, h2, h3, h4, h5, h6 {
