@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { COLORS } from '../context/theme';
 import type { Venta, DetalleVenta } from '../../domain/entities/tienda';
 import PrintIcon from '@mui/icons-material/Print';
 
@@ -87,16 +88,16 @@ export const HistorialVentasPage: React.FC = () => {
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
         ) : historial.length === 0 ? (
-          <Typography sx={{ textAlign: 'center', mt: 5, color: '#57423f' }}>No hay ventas registradas en este rango.</Typography>
+          <Typography sx={{ textAlign: 'center', mt: 5, color: COLORS.inkSecondary }}>No hay ventas registradas en este rango.</Typography>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {historial.map(({ venta, detalles }) => (
               <Paper key={venta.id_venta} className="card" sx={{ p: 3, borderRadius: '12px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography sx={{ fontWeight: 'bold', color: '#8C261F' }}>
+                  <Typography sx={{ fontWeight: 'bold', color: COLORS.primary }}>
                     Venta #{venta.id_venta}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#777' }}>
+                  <Typography variant="caption" sx={{ color: COLORS.inkTertiary }}>
                     {new Date(venta.fecha_venta).toLocaleString()}
                   </Typography>
                 </Box>
@@ -108,8 +109,8 @@ export const HistorialVentasPage: React.FC = () => {
                     </Box>
                   ))}
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #eee', pt: 1 }}>
-                  <Typography sx={{ fontWeight: 'bold', fontSize: '18px', color: '#2B2B2B' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: `1px solid ${COLORS.border}`, pt: 1 }}>
+                  <Typography sx={{ fontWeight: 'bold', fontSize: '18px', color: COLORS.ink }}>
                     Total: ${venta.total.toFixed(2)}
                   </Typography>
                 </Box>

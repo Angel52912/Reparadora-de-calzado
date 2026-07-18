@@ -4,26 +4,30 @@ interface SkeletonCardProps {
   lines?: number;
 }
 
-// ── Keyframes de la animación de carga ────────────────────────────────────
+// ── Keyframes de animación ─────────────────────────────────────────────────
 const LOADER_STYLE_ID = 'sk-loader-kf';
 if (typeof document !== 'undefined' && !document.getElementById(LOADER_STYLE_ID)) {
   const s = document.createElement('style');
   s.id = LOADER_STYLE_ID;
   s.textContent = `
     @keyframes sk-fade-in {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0);   }
     }
     @keyframes sk-pulse-ring {
-      0%   { transform: scale(0.88); box-shadow: 0 0 0 0 rgba(140,38,31,0.4); }
-      70%  { transform: scale(1);    box-shadow: 0 0 0 16px rgba(140,38,31,0); }
-      100% { transform: scale(0.88); box-shadow: 0 0 0 0 rgba(140,38,31,0);   }
+      0%   { transform: scale(0.90); box-shadow: 0 0 0 0   rgba(140,38,31,0.35); }
+      60%  { transform: scale(1.02); box-shadow: 0 0 0 18px rgba(140,38,31,0); }
+      100% { transform: scale(0.90); box-shadow: 0 0 0 0   rgba(140,38,31,0); }
+    }
+    @keyframes sk-dot-blink {
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+      40%            { opacity: 1;   transform: scale(1); }
     }
   `;
   document.head.appendChild(s);
 }
 
-/** Vista de carga: un único elemento centrado con ícono pulsante y texto. */
+/** Vista de carga: ícono pulsante centrado con puntos de espera */
 export const SkeletonCard: React.FC<SkeletonCardProps> = () => (
   <div
     style={{
@@ -31,40 +35,59 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = () => (
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 14,
-      padding: '60px 24px',
+      gap: 18,
+      padding: '72px 24px',
       animation: 'sk-fade-in 0.3s ease both',
     }}
   >
+    {/* Ícono con animación de pulso */}
     <div
       style={{
-        width: 58, height: 58,
+        width: 64, height: 64,
         borderRadius: '50%',
         background: 'linear-gradient(135deg, #8C261F 0%, #C0522A 100%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        animation: 'sk-pulse-ring 1.6s ease-out infinite',
+        animation: 'sk-pulse-ring 1.8s cubic-bezier(0.4,0,0.6,1) infinite',
+        boxShadow: '0 4px 20px rgba(140,38,31,0.25)',
       }}
     >
       <span
         className="material-symbols-outlined fill"
-        style={{ fontSize: 27, color: '#fff', userSelect: 'none' }}
+        style={{ fontSize: 30, color: '#fff', userSelect: 'none' }}
       >
         handyman
       </span>
     </div>
+
+    {/* Texto de carga */}
     <p
       style={{
         margin: 0,
-        fontFamily: "'Work Sans', system-ui, sans-serif",
-        fontSize: 13,
-        fontWeight: 500,
-        color: '#9a7b6f',
-        letterSpacing: '0.04em',
-        animation: 'sk-fade-in 0.4s ease 0.15s both',
+        fontFamily: "'Inter', 'Quicksand', system-ui, sans-serif",
+        fontSize: 14,
+        fontWeight: 600,
+        color: '#8a7370',
+        letterSpacing: '0.03em',
+        animation: 'sk-fade-in 0.4s ease 0.12s both',
       }}
     >
-      Cargando servicios…
+      Cargando…
     </p>
+
+    {/* Puntos animados */}
+    <div style={{ display: 'flex', gap: 6, animation: 'sk-fade-in 0.4s ease 0.22s both' }}>
+      {[0, 1, 2].map(i => (
+        <div
+          key={i}
+          style={{
+            width: 7, height: 7,
+            borderRadius: '50%',
+            background: '#D4A373',
+            animation: `sk-dot-blink 1.2s ease-in-out ${i * 0.2}s infinite`,
+          }}
+        />
+      ))}
+    </div>
   </div>
 );
 
@@ -90,55 +113,59 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '48px 24px',
+      padding: '56px 24px',
       textAlign: 'center',
-      gap: 12,
-      animation: 'fadeIn .25s ease',
+      gap: 10,
+      animation: 'sk-fade-in .28s ease both',
     }}
   >
-    <span style={{ fontSize: 56 }}>{icon}</span>
+    {/* Ícono con fondo suave */}
+    <div
+      style={{
+        width: 80, height: 80,
+        borderRadius: '50%',
+        background: 'rgba(212,163,115,0.12)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 4,
+        border: '1px solid rgba(212,163,115,0.2)',
+      }}
+    >
+      <span style={{ fontSize: 40, lineHeight: 1 }}>{icon}</span>
+    </div>
+
     <p
       style={{
-        fontFamily: "'Work Sans', sans-serif",
+        fontFamily: "'Quicksand', 'Inter', sans-serif",
         fontWeight: 700,
-        fontSize: 18,
-        color: '#2B2B2B',
+        fontSize: 19,
+        color: '#1A1210',
         margin: 0,
+        letterSpacing: '-0.2px',
       }}
     >
       {title}
     </p>
+
     {subtitle && (
       <p
         style={{
-          fontFamily: "'Work Sans', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           fontSize: 14,
-          color: '#57423f',
+          color: '#8a7370',
           margin: 0,
-          maxWidth: 280,
+          maxWidth: 300,
+          lineHeight: 1.55,
         }}
       >
         {subtitle}
       </p>
     )}
+
     {actionLabel && onAction && (
       <button
         onClick={onAction}
         className="btn-primary"
-        style={{
-          marginTop: 8,
-          padding: '10px 28px',
-          fontSize: 15,
-          cursor: 'pointer',
-          border: 'none',
-          background: '#8C261F',
-          color: '#fff',
-          borderRadius: 9999,
-          fontWeight: 600,
-          fontFamily: "'Work Sans', sans-serif",
-          minHeight: 44,
-          minWidth: 44,
-        }}
+        style={{ marginTop: 12 }}
       >
         {actionLabel}
       </button>

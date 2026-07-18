@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { COLORS } from '../context/theme';
 import type { Producto } from '../../domain/entities/tienda';
 
 const tiendaRepository = new TiendaRepository();
@@ -43,10 +44,10 @@ export const CatalogoPage: React.FC = () => {
                 {/* Aplicando estilo .card del css legacy mediante className */}
                 <Box className="card" sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
-                    <Typography sx={{ fontWeight: 600, color: '#2B2B2B' }}>{p.nombre}</Typography>
-                    <Typography sx={{ fontSize: '14px', color: '#57423f' }}>Stock: {p.stock_actual}</Typography>
+                    <Typography sx={{ fontWeight: 600, color: COLORS.ink }}>{p.nombre}</Typography>
+                    <Typography sx={{ fontSize: '14px', color: COLORS.inkSecondary }}>Stock: {p.stock_actual}</Typography>
                   </Box>
-                  <Typography sx={{ fontWeight: 800, color: '#8C261F', fontSize: '18px' }}>
+                  <Typography sx={{ fontWeight: 800, color: COLORS.primary, fontSize: '18px' }}>
                     ${Number(p.precio_venta).toFixed(2)}
                   </Typography>
                 </Box>

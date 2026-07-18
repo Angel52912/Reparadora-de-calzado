@@ -3,6 +3,7 @@ import { Box, Typography, CircularProgress, Button, Grid } from '@mui/material';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { COLORS } from '../context/theme';
 import { useToast } from '../context/ToastContext';
 import type { Producto } from '../../domain/entities/tienda';
 
@@ -100,7 +101,7 @@ export const VentasPage: React.FC = () => {
           <Grid container spacing={2}>
             {/* Sección de Selección */}
             <Grid item xs={12}>
-              <Typography variant="h6" sx={{ color: '#57423f', mb: 2 }}>Seleccionar Productos</Typography>
+              <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Seleccionar Productos</Typography>
             </Grid>
             {productos.map(p => (
               <Grid item xs={12} sm={6} key={p.id_producto}>
@@ -116,7 +117,7 @@ export const VentasPage: React.FC = () => {
 
             {/* Carrito */}
             <Grid item xs={12} sx={{ mt: 4 }}>
-              <Typography variant="h6" sx={{ color: '#57423f', mb: 2 }}>Carrito</Typography>
+              <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Carrito</Typography>
               {carrito.map(item => (
                 <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography>{item.producto.nombre} x {item.cantidad}</Typography>
@@ -128,7 +129,7 @@ export const VentasPage: React.FC = () => {
                 </Box>
               ))}
               <Box sx={{ mt: 2, textAlign: 'right' }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#8C261F', mb: 2 }}>Total: ${totalVenta.toFixed(2)}</Typography>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: COLORS.primary, mb: 2 }}>Total: ${totalVenta.toFixed(2)}</Typography>
                 <Button className="btn-primary" sx={{ px: 4, py: 1.5 }} onClick={registrarVenta} disabled={carrito.length === 0}>
                   Confirmar Venta
                 </Button>

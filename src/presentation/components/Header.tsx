@@ -26,42 +26,153 @@ export const Header: React.FC<HeaderProps> = ({
   notificacionesCount = 0,
 }) => {
   return (
-    <AppBar position="sticky" sx={{ top: 0, zIndex: 40, bgcolor: '#FEF9F0', borderBottom: '1px solid rgba(212, 163, 115, 0.3)' }}>
-      <Toolbar sx={{ justifyContent: 'space-between', minHeight: 64 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        top: 0,
+        zIndex: 40,
+        bgcolor: 'rgba(254, 249, 240, 0.88)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(212, 163, 115, 0.22)',
+        boxShadow: '0 1px 12px rgba(36, 25, 23, 0.06)',
+      }}
+    >
+      <Toolbar
+        sx={{
+          justifyContent: 'space-between',
+          minHeight: { xs: 60, sm: 64 },
+          px: { xs: 1.5, sm: 2 },
+        }}
+      >
+        {/* Izquierda: botón atrás + título */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flex: 1, minWidth: 0 }}>
           {backHref || onBack ? (
-            <IconButton 
-              component={backHref ? Link : 'button'} 
+            <IconButton
+              component={backHref ? Link : 'button'}
               to={backHref}
               onClick={onBack}
-              color="inherit" 
-              sx={{ color: '#8C261F' }}
+              size="small"
+              sx={{
+                color: '#8C261F',
+                bgcolor: 'rgba(140,38,31,0.07)',
+                borderRadius: '10px',
+                width: 36,
+                height: 36,
+                flexShrink: 0,
+                transition: 'all 0.18s ease',
+                '&:hover': {
+                  bgcolor: 'rgba(140,38,31,0.14)',
+                  transform: 'translateX(-1px)',
+                },
+              }}
             >
-              <ArrowBackIcon />
+              <ArrowBackIcon sx={{ fontSize: 20 }} />
             </IconButton>
           ) : (
-            <Box sx={{ width: 40, height: 40 }} />
+            /* Logo / ícono cuando estamos en raíz */
+            <Box
+              sx={{
+                width: 36, height: 36, flexShrink: 0,
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #8C261F 0%, #C0522A 100%)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(140,38,31,0.28)',
+              }}
+            >
+              <span className="material-symbols-outlined fill" style={{ fontSize: 20, color: '#fff' }}>
+                handyman
+              </span>
+            </Box>
           )}
-          <Typography variant="h6" component="h1" sx={{ fontWeight: 'bold', fontSize: 20, color: '#8C261F' }}>
-            {title}
-          </Typography>
+
+          {title && (
+            <Typography
+              variant="h6"
+              component="h1"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: 17, sm: 19 },
+                color: '#1A1210',
+                letterSpacing: '-0.2px',
+                fontFamily: "'Quicksand', 'Inter', sans-serif",
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {title}
+            </Typography>
+          )}
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+        {/* Derecha: acciones */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {homeHref && (
-            <IconButton component={Link} to={homeHref} color="inherit" title="Inicio" sx={{ color: '#8C261F' }}>
-              <HomeIcon />
+            <IconButton
+              component={Link}
+              to={homeHref}
+              size="small"
+              title="Inicio"
+              sx={{
+                color: '#57423f',
+                width: 36, height: 36,
+                borderRadius: '10px',
+                transition: 'all 0.18s ease',
+                '&:hover': { bgcolor: 'rgba(140,38,31,0.08)', color: '#8C261F' },
+              }}
+            >
+              <HomeIcon sx={{ fontSize: 21 }} />
             </IconButton>
           )}
           {notificacionesHref && (
-            <IconButton component={Link} to={notificacionesHref} color="inherit" title="Notificaciones" sx={{ color: '#8C261F' }}>
-              <Badge badgeContent={notificacionesCount} color="error">
-                <NotificationsIcon />
+            <IconButton
+              component={Link}
+              to={notificacionesHref}
+              size="small"
+              title="Notificaciones"
+              sx={{
+                color: '#57423f',
+                width: 36, height: 36,
+                borderRadius: '10px',
+                transition: 'all 0.18s ease',
+                '&:hover': { bgcolor: 'rgba(140,38,31,0.08)', color: '#8C261F' },
+              }}
+            >
+              <Badge
+                badgeContent={notificacionesCount}
+                sx={{
+                  '& .MuiBadge-badge': {
+                    background: 'linear-gradient(135deg, #ba1a1a, #e53935)',
+                    color: '#fff',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    minWidth: 18,
+                    height: 18,
+                    border: '2px solid rgba(254,249,240,0.9)',
+                  },
+                }}
+              >
+                <NotificationsIcon sx={{ fontSize: 21 }} />
               </Badge>
             </IconButton>
           )}
           {settingsHref && (
-            <IconButton component={Link} to={settingsHref} color="inherit" title="Ajustes" sx={{ color: '#8C261F' }}>
-              <SettingsIcon />
+            <IconButton
+              component={Link}
+              to={settingsHref}
+              size="small"
+              title="Ajustes"
+              sx={{
+                color: '#57423f',
+                width: 36, height: 36,
+                borderRadius: '10px',
+                transition: 'all 0.18s ease',
+                '&:hover': { bgcolor: 'rgba(140,38,31,0.08)', color: '#8C261F' },
+              }}
+            >
+              <SettingsIcon sx={{ fontSize: 21 }} />
             </IconButton>
           )}
         </Box>

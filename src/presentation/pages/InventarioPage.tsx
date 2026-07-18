@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { COLORS } from '../context/theme';
+import { useToast } from '../context/ToastContext';
 import type { Producto } from '../../domain/entities/tienda';
 
 const tiendaRepository = new TiendaRepository();
@@ -23,6 +25,7 @@ export const InventarioPage: React.FC = () => {
   const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [cambios, setCambios] = useState<Record<number, number>>({});
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   useEffect(() => {
     tiendaUseCases.getProductos().then(data => {
@@ -49,8 +52,9 @@ export const InventarioPage: React.FC = () => {
       try {
         await tiendaUseCases.eliminarProducto(id);
         setProductos(prev => prev.filter(p => p.id_producto !== id));
+        showToast('Producto eliminado del inventario.', 'success');
       } catch (error) {
-        alert('Error al eliminar el producto: ' + error);
+        showToast('Error al eliminar el producto. Intenta de nuevo.', 'error');
       }
     }
   };
@@ -61,9 +65,9 @@ export const InventarioPage: React.FC = () => {
         await tiendaRepository.updateStock(Number(id), nuevoStock);
       }
       setCambios({});
-      alert('Cambios guardados con éxito');
+      showToast('Stock actualizado con éxito ✓', 'success');
     } catch (error) {
-      alert('Error al guardar cambios: ' + error);
+      showToast('Error al guardar cambios. Intenta de nuevo.', 'error');
     }
   };
 
@@ -78,7 +82,7 @@ export const InventarioPage: React.FC = () => {
       />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
         {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress sx={{ color: COLORS.primary }} /></Box>
         ) : (
           <Grid container spacing={2}>
             {productos.map(p => (
@@ -86,7 +90,7 @@ export const InventarioPage: React.FC = () => {
                 <Box className="card" sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography sx={{ fontWeight: 600 }}>{p.nombre}</Typography>
-                    <Typography sx={{ fontSize: '14px', color: '#57423f' }}>Stock: {p.stock_actual}</Typography>
+                    <Typography sx={{ fontSize: '14px', color: COLORS.inkSecondary }}>Stock: {p.stock_actual}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <IconButton onClick={() => updateStockLocal(p.id_producto, -1)}><RemoveIcon /></IconButton>
@@ -99,13 +103,14 @@ export const InventarioPage: React.FC = () => {
               </Grid>
             ))}
             <Grid item xs={12} sx={{ mt: 2 }}>
-              <Button 
-                variant="contained" 
-                fullWidth 
+              <Button
+                className="btn-primary"
+                fullWidth
                 onClick={guardarCambios}
                 disabled={Object.keys(cambios).length === 0}
+                sx={{ py: 1.5, minHeight: 48 }}
               >
-                Guardar Cambios
+                Guardar Cambios de Stock
               </Button>
             </Grid>
           </Grid>

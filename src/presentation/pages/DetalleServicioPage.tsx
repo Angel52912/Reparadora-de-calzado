@@ -13,6 +13,7 @@ import { useToast } from '../context/ToastContext';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
 import { TallerUseCases } from '../../useCases/taller/TallerUseCases';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
+import { COLORS } from '../context/theme';
 import type { TicketTaller, EstadoTicket } from '../../domain/entities/taller';
 
 const tallerRepository = new TallerRepository();
@@ -24,18 +25,18 @@ const FLUJO_ESTADOS: EstadoTicket[] = ['Recibido', 'En Proceso', 'Terminado', 'E
 const ESTADO_ABANDONADO: EstadoTicket = 'Abandonado';
 
 const STATUS_STYLE: Record<EstadoTicket, { bg: string; color: string; border: string; emoji: string }> = {
-  'Recibido':   { bg: '#FFF3E0', color: '#E65100', border: '#E6510033', emoji: '📥' },
-  'En Proceso': { bg: '#E3F2FD', color: '#1565C0', border: '#1565C033', emoji: '⚙️' },
-  'Terminado':  { bg: '#E8F5E9', color: '#2E7D32', border: '#2E7D3233', emoji: '✅' },
-  'Entregado':  { bg: '#EDE7F6', color: '#4527A0', border: '#4527A033', emoji: '🎁' },
-  'Abandonado': { bg: '#F5F5F5', color: '#616161', border: '#61616133', emoji: '🚫' },
+  'Recibido':   { bg: COLORS.status.recibido.bg,   color: COLORS.status.recibido.color,   border: COLORS.status.recibido.border,   emoji: '📥' },
+  'En Proceso': { bg: COLORS.status.enProceso.bg,  color: COLORS.status.enProceso.color,  border: COLORS.status.enProceso.border,  emoji: '⚙️' },
+  'Terminado':  { bg: COLORS.status.terminado.bg,  color: COLORS.status.terminado.color,  border: COLORS.status.terminado.border,  emoji: '✅' },
+  'Entregado':  { bg: COLORS.status.entregado.bg,  color: COLORS.status.entregado.color,  border: COLORS.status.entregado.border,  emoji: '🎁' },
+  'Abandonado': { bg: COLORS.status.abandonado.bg, color: COLORS.status.abandonado.color, border: COLORS.status.abandonado.border, emoji: '🚫' },
 };
 
 // Fila de información con label y valor
 const InfoRow = ({ label, value }: { label: string; value: string }) => (
   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', py: 0.75 }}>
-    <Typography sx={{ fontSize: 13, color: '#57423f', fontWeight: 600, minWidth: 120 }}>{label}</Typography>
-    <Typography sx={{ fontSize: 14, color: '#202020', textAlign: 'right', flex: 1 }}>{value}</Typography>
+    <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, fontWeight: 600, minWidth: 120 }}>{label}</Typography>
+    <Typography sx={{ fontSize: 14, color: COLORS.ink, textAlign: 'right', flex: 1 }}>{value}</Typography>
   </Box>
 );
 
@@ -102,8 +103,8 @@ const EstadoStepper = ({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      background: activo ? s.color : completado ? s.bg : '#F5F5F5',
-                      border: `2.5px solid ${activo ? s.color : completado ? s.color : '#E0E0E0'}`,
+                      background: activo ? s.color : completado ? s.bg : COLORS.bg,
+                      border: `2.5px solid ${activo ? s.color : completado ? s.color : COLORS.border}`,      
                       transition: 'all 0.22s ease',
                       boxShadow: activo ? `0 0 0 4px ${s.color}22` : 'none',
                       position: 'relative',
@@ -123,7 +124,7 @@ const EstadoStepper = ({
                     sx={{
                       fontSize: 10,
                       fontWeight: activo ? 800 : 500,
-                      color: activo ? s.color : completado ? s.color : '#9E9E9E',
+                      color: activo ? s.color : completado ? s.color : COLORS.inkDisabled,
                       textAlign: 'center',
                       whiteSpace: 'nowrap',
                       letterSpacing: activo ? '0.02em' : 0,
@@ -146,7 +147,7 @@ const EstadoStepper = ({
                     borderRadius: 9999,
                     background: completado || (activo && idx < FLUJO_ESTADOS.length - 1)
                       ? STATUS_STYLE[FLUJO_ESTADOS[idx]].color
-                      : '#E0E0E0',
+                      : COLORS.border,
                     mx: 0.5,
                     transition: 'background 0.3s ease',
                     alignSelf: 'flex-start',
@@ -189,7 +190,7 @@ const EstadoStepper = ({
                 color: STATUS_STYLE.Abandonado.color,
                 borderColor: STATUS_STYLE.Abandonado.color,
               },
-              '&:focus-visible': { outline: '2px solid #616161', borderRadius: 9999 },
+              '&:focus-visible': { outline: `2px solid ${COLORS.inkTertiary}`, borderRadius: 9999 },
             }}
           >
             {saving && esAbandonado
@@ -201,7 +202,7 @@ const EstadoStepper = ({
         </Tooltip>
       </Box>
 
-      <Typography sx={{ fontSize: 12, color: '#9E9E9E', mt: 1.5, lineHeight: 1.5 }}>
+      <Typography sx={{ fontSize: 12, color: COLORS.inkDisabled, mt: 1.5, lineHeight: 1.5 }}>
         Toca un estado para actualizar sin salir de esta pantalla.
       </Typography>
     </Box>
@@ -249,7 +250,7 @@ export const DetalleServicioPage: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <CircularProgress sx={{ color: '#8C261F' }} />
+        <CircularProgress sx={{ color: COLORS.primary }} />
       </Box>
     );
   }
@@ -290,10 +291,10 @@ export const DetalleServicioPage: React.FC = () => {
         <Paper className="card" elevation={0} sx={{ p: 3, mb: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
             <Box sx={{ flex: 1 }}>
-              <Typography sx={{ fontWeight: 800, fontSize: 20, color: '#202020', lineHeight: 1.2 }}>
+              <Typography sx={{ fontWeight: 800, fontSize: 20, color: COLORS.ink, lineHeight: 1.2 }}>
                 {ticket.producto}
               </Typography>
-              <Typography sx={{ fontSize: 13, color: '#57423f', mt: 0.5 }}>
+              <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, mt: 0.5 }}>
                 Ticket #{ticket.id_servicio} · {fechaTexto}
               </Typography>
             </Box>
@@ -317,47 +318,47 @@ export const DetalleServicioPage: React.FC = () => {
             </Box>
           </Box>
 
-          <Divider sx={{ my: 1.5, borderColor: '#D4A37322' }} />
+          <Divider sx={{ my: 1.5, borderColor: COLORS.border }} />
 
           {/* ── Datos del cliente ── */}
-          <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#D4A373', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
+          <Typography sx={{ fontSize: 11, fontWeight: 700, color: COLORS.secondary, textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
             Cliente
           </Typography>
           <InfoRow label="Nombre"   value={ticket.nombre_cliente} />
           <InfoRow label="Teléfono" value={ticket.telefono || 'No proporcionado'} />
 
-          <Divider sx={{ my: 1.5, borderColor: '#D4A37322' }} />
+          <Divider sx={{ my: 1.5, borderColor: COLORS.border }} />
 
           {/* ── Descripción del servicio ── */}
-          <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#D4A373', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
+          <Typography sx={{ fontSize: 11, fontWeight: 700, color: COLORS.secondary, textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
             Servicio
           </Typography>
-          <Typography sx={{ fontSize: 14, color: '#202020', lineHeight: 1.6 }}>
+          <Typography sx={{ fontSize: 14, color: COLORS.ink, lineHeight: 1.6 }}>
             {ticket.servicio_solicitado}
           </Typography>
 
-          <Divider sx={{ my: 1.5, borderColor: '#D4A37322' }} />
+          <Divider sx={{ my: 1.5, borderColor: COLORS.border }} />
 
           {/* ── Costos ── */}
-          <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#D4A373', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
+          <Typography sx={{ fontSize: 11, fontWeight: 700, color: COLORS.secondary, textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1 }}>
             Costos
           </Typography>
-          <Box sx={{ background: '#FEF9F0', borderRadius: 2, p: 2 }}>
+          <Box sx={{ background: COLORS.secondarySubtle, borderRadius: 2, p: 2 }}>
             <InfoRow label="Mano de obra"  value={`$${ticket.costo_mano_obra.toFixed(2)}`} />
             <InfoRow label="Materiales"    value={`$${ticket.costo_materiales.toFixed(2)}`} />
-            <Divider sx={{ my: 0.75, borderColor: '#D4A37333' }} />
+            <Divider sx={{ my: 0.75, borderColor: COLORS.borderStrong }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5 }}>
-              <Typography sx={{ fontWeight: 800, fontSize: 15, color: '#202020' }}>Total</Typography>
-              <Typography sx={{ fontWeight: 800, fontSize: 15, color: '#8C261F' }}>
+              <Typography sx={{ fontWeight: 800, fontSize: 15, color: COLORS.ink }}>Total</Typography>
+              <Typography sx={{ fontWeight: 800, fontSize: 15, color: COLORS.primary }}>
                 ${ticket.costo_total.toFixed(2)}
               </Typography>
             </Box>
             <InfoRow label="Anticipo"  value={`$${ticket.anticipo.toFixed(2)}`} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5 }}>
-              <Typography sx={{ fontWeight: 700, fontSize: 14, color: restante > 0 ? '#ba1a1a' : '#2E7D32' }}>
+              <Typography sx={{ fontWeight: 700, fontSize: 14, color: restante > 0 ? COLORS.error : COLORS.success }}>
                 Restante
               </Typography>
-              <Typography sx={{ fontWeight: 700, fontSize: 14, color: restante > 0 ? '#ba1a1a' : '#2E7D32' }}>
+              <Typography sx={{ fontWeight: 700, fontSize: 14, color: restante > 0 ? COLORS.error : COLORS.success }}>
                 ${restante.toFixed(2)}
               </Typography>
             </Box>
@@ -366,7 +367,7 @@ export const DetalleServicioPage: React.FC = () => {
 
         {/* ── Stepper dinámico de estado ── */}
         <Paper className="card" elevation={0} sx={{ p: 3, mb: 2 }}>
-          <Typography sx={{ fontSize: 11, fontWeight: 700, color: '#D4A373', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 2 }}>
+          <Typography sx={{ fontSize: 11, fontWeight: 700, color: COLORS.secondary, textTransform: 'uppercase', letterSpacing: '0.06em', mb: 2 }}>
             Actualizar Estado
           </Typography>
           <EstadoStepper
@@ -386,10 +387,10 @@ export const DetalleServicioPage: React.FC = () => {
             py: 1.5,
             fontWeight: 700,
             fontSize: 14,
-            border: '1.5px solid #D4A37366',
-            color: '#57423f',
+            border: `1.5px solid ${COLORS.borderStrong}`,
+            color: COLORS.inkSecondary,
             background: 'transparent',
-            '&:hover': { background: '#FEF9F0', borderColor: '#D4A373' },
+            '&:hover': { background: COLORS.secondarySubtle, borderColor: COLORS.secondary },
             minHeight: 48,
           }}
           aria-label="Editar todos los datos del servicio"

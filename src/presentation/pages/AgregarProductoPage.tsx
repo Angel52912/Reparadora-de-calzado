@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
+import { COLORS } from '../context/theme';
 import { useToast } from '../context/ToastContext';
 
 const tiendaRepository = new TiendaRepository();
@@ -114,7 +115,7 @@ export const AgregarProductoPage: React.FC = () => {
       />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
         <Box className="card" sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-          <Typography variant="h6" sx={{ color: '#8C261F', mb: 1 }}>
+          <Typography variant="h6" sx={{ color: COLORS.primary, mb: 1 }}>
             Detalles del Producto
           </Typography>
 
@@ -154,9 +155,9 @@ export const AgregarProductoPage: React.FC = () => {
             className="btn-primary"
             sx={{
               mt: 2, py: 1.5, minHeight: 44,
-              backgroundColor: '#8C261F',
+              backgroundColor: COLORS.primary,
               color: '#FFFFFF',
-              '&:hover': { backgroundColor: '#6c0d0b' },
+              '&:hover': { backgroundColor: COLORS.primaryDark },
             }}
             onClick={handleSubmit}
             disabled={saving}

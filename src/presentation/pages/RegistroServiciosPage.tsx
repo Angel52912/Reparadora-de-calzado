@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
-  Box, Typography, Paper, Chip, IconButton,
+  Box, Typography, Paper, IconButton,
   Checkbox, Tooltip, Collapse,
 } from '@mui/material';
+import { COLORS } from '../../presentation/context/theme';
 // @ts-ignore
 import DeleteIcon from '@mui/icons-material/Delete';
 // @ts-ignore
@@ -25,11 +26,11 @@ const tallerUseCases   = new TallerUseCases(tallerRepository);
 const ESTADOS: EstadoTicket[] = ['Recibido', 'En Proceso', 'Terminado', 'Entregado', 'Abandonado'];
 
 const STATUS_STYLE: Record<EstadoTicket, { bg: string; color: string }> = {
-  'Recibido':   { bg: '#FFF3E0', color: '#E65100' },
-  'En Proceso': { bg: '#E3F2FD', color: '#1565C0' },
-  'Terminado':  { bg: '#E8F5E9', color: '#2E7D32' },
-  'Entregado':  { bg: '#EDE7F6', color: '#4527A0' },
-  'Abandonado': { bg: '#FAFAFA', color: '#757575' },
+  'Recibido':   { bg: COLORS.status.recibido.bg,   color: COLORS.status.recibido.color },
+  'En Proceso': { bg: COLORS.status.enProceso.bg,  color: COLORS.status.enProceso.color },
+  'Terminado':  { bg: COLORS.status.terminado.bg,  color: COLORS.status.terminado.color },
+  'Entregado':  { bg: COLORS.status.entregado.bg,  color: COLORS.status.entregado.color },
+  'Abandonado': { bg: COLORS.status.abandonado.bg, color: COLORS.status.abandonado.color },
 };
 
 // ── Dot de color ───────────────────────────────────────────────────────────
@@ -69,7 +70,7 @@ const FiltroSelector = ({
 }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const color = value === 'Todos' ? '#8C261F' : STATUS_STYLE[value].color;
+  const color = value === 'Todos' ? COLORS.primary : STATUS_STYLE[value].color;
   const count = value === 'Todos'
     ? tickets.length
     : tickets.filter(t => t.estado === value).length;
@@ -95,7 +96,7 @@ const FiltroSelector = ({
           px: 1.25, py: 0.5,
           borderRadius: 9999,
           border: `1px solid ${color}40`,
-          background: value === 'Todos' ? '#FFF5F0' : STATUS_STYLE[value as EstadoTicket].bg,
+          background: value === 'Todos' ? COLORS.primarySubtle : STATUS_STYLE[value as EstadoTicket].bg,
           cursor: 'pointer',
           userSelect: 'none',
           transition: 'all 0.15s ease',
@@ -126,13 +127,13 @@ const FiltroSelector = ({
             position: 'absolute', top: 'calc(100% + 4px)', left: 0,
             zIndex: 1300, minWidth: 160,
             borderRadius: 2, overflow: 'hidden',
-            border: '1px solid #D4A37322',
+            border: `1px solid ${COLORS.border}`,
             py: 0.5,
           }}
         >
           {opciones.map(op => {
-            const c = op === 'Todos' ? '#8C261F' : STATUS_STYLE[op].color;
-            const bg = op === 'Todos' ? '#FFF5F0' : STATUS_STYLE[op].bg;
+            const c = op === 'Todos' ? COLORS.primary : STATUS_STYLE[op].color;
+            const bg = op === 'Todos' ? COLORS.primarySubtle : STATUS_STYLE[op].bg;
             const n = op === 'Todos'
               ? tickets.length
               : tickets.filter(t => t.estado === op).length;
@@ -151,7 +152,7 @@ const FiltroSelector = ({
                 }}
               >
                 <Dot color={c} />
-                <Typography sx={{ fontSize: 12, fontWeight: activo ? 700 : 500, color: activo ? c : '#444', flex: 1 }}>
+                <Typography sx={{ fontSize: 12, fontWeight: activo ? 700 : 500, color: activo ? c : COLORS.inkSecondary, flex: 1 }}>
                   {op}
                 </Typography>
                 <Typography sx={{ fontSize: 11, color: `${c}99`, fontWeight: 600 }}>
@@ -247,11 +248,11 @@ export const RegistroServiciosPage: React.FC = () => {
           {/* Acciones de selección */}
           <Collapse in={modoSeleccion} orientation="horizontal">
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography sx={{ fontSize: 12, color: '#57423f', px: 0.5 }}>
+              <Typography sx={{ fontSize: 12, color: COLORS.inkSecondary, px: 0.5 }}>
                 {seleccionados.size} sel.
               </Typography>
               <Tooltip title="Cancelar">
-                <IconButton size="small" onClick={cancelarSeleccion} sx={{ color: '#888' }}>
+                <IconButton size="small" onClick={cancelarSeleccion} sx={{ color: COLORS.inkTertiary }}>
                   <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
                 </IconButton>
               </Tooltip>
@@ -268,10 +269,10 @@ export const RegistroServiciosPage: React.FC = () => {
                 size="small"
                 onClick={modoSeleccion ? (seleccionados.size > 0 ? eliminarSeleccionados : undefined) : activarModoSeleccion}
                 sx={{
-                  color: modoSeleccion && seleccionados.size > 0 ? '#ba1a1a' : '#57423f',
+                  color: modoSeleccion && seleccionados.size > 0 ? COLORS.error : COLORS.inkSecondary,
                   opacity: modoSeleccion && seleccionados.size === 0 ? 0.4 : 1,
                   border: '1px solid',
-                  borderColor: modoSeleccion && seleccionados.size > 0 ? '#ba1a1a33' : '#D4A37333',
+                  borderColor: modoSeleccion && seleccionados.size > 0 ? `${COLORS.error}33` : COLORS.border,
                   borderRadius: 1.5,
                   p: 0.5,
                   transition: 'all 0.18s ease',
@@ -307,7 +308,7 @@ export const RegistroServiciosPage: React.FC = () => {
                   elevation={0}
                   sx={{
                     p: 0,
-                    outline: seleccionado ? '2px solid #8C261F' : 'none',
+                    outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none',
                     transition: 'outline 0.12s ease, box-shadow 0.12s ease',
                   }}
                 >
@@ -327,7 +328,7 @@ export const RegistroServiciosPage: React.FC = () => {
                       <Checkbox
                         checked={seleccionado}
                         size="small"
-                        sx={{ p: 0, color: '#8C261F', '&.Mui-checked': { color: '#8C261F' } }}
+                        sx={{ p: 0, color: COLORS.primary, '&.Mui-checked': { color: COLORS.primary } }}
                         onClick={e => { e.stopPropagation(); toggleSeleccion(t.id_servicio); }}
                       />
                     )}
@@ -340,10 +341,10 @@ export const RegistroServiciosPage: React.FC = () => {
 
                     {/* Contenido */}
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontWeight: 700, fontSize: 13.5, color: '#202020', lineHeight: 1.3 }} noWrap>
+                      <Typography sx={{ fontWeight: 700, fontSize: 13.5, color: COLORS.ink, lineHeight: 1.3 }} noWrap>
                         {t.producto}
                       </Typography>
-                      <Typography sx={{ fontSize: 12, color: '#7a6360', lineHeight: 1.3 }} noWrap>
+                      <Typography sx={{ fontSize: 12, color: COLORS.inkTertiary, lineHeight: 1.3 }} noWrap>
                         {t.nombre_cliente}
                         <Box component="span" sx={{ mx: 0.5, opacity: 0.4 }}>·</Box>
                         {t.servicio_solicitado}

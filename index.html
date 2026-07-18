@@ -11,17 +11,17 @@
     <meta name="theme-color" content="#8C261F" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph (redes sociales) -->
+    <!-- Open Graph -->
     <meta property="og:type"        content="website" />
     <meta property="og:title"       content="Reparadora de Calzado | Taller Artesanal" />
     <meta property="og:description" content="Reparación y restauración artesanal de calzado. Agenda tu cita o visítanos." />
     <meta property="og:locale"      content="es_MX" />
 
-    <!-- Tipografías: Work Sans + Quicksand (Google Fonts) -->
+    <!-- Google Fonts: Inter + Quicksand -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -30,49 +30,84 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      /* ── Splash Screen ── */
+      @keyframes splash-pulse {
+        0%, 100% { transform: scale(1);    box-shadow: 0 8px 32px rgba(140,38,31,0.25); }
+        50%       { transform: scale(1.05); box-shadow: 0 14px 44px rgba(140,38,31,0.38); }
+      }
+      @keyframes splash-bar {
+        0%   { transform: translateX(-100%); }
+        50%  { transform: translateX(200%); }
+        100% { transform: translateX(400%); }
+      }
+      @keyframes splash-fade-in {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    </style>
   </head>
   <body>
-    <!-- Splash screen: fuera de #root para no heredar estilos flex del CSS -->
+    <!-- Splash screen fuera de #root -->
     <div id="splash" style="
       position: fixed; inset: 0; z-index: 9999;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       background: #FEF9F0;
-      font-family: 'Work Sans', system-ui, sans-serif;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      font-family: 'Inter', 'Quicksand', system-ui, sans-serif;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
     ">
+      <!-- Ícono animado -->
       <div style="
-        width: 80px; height: 80px;
+        width: 84px; height: 84px;
         border-radius: 50%;
         background: linear-gradient(135deg, #8C261F 0%, #C0522A 100%);
         display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 8px 32px rgba(140, 38, 31, 0.25);
-        animation: splash-pulse 2s ease-in-out infinite;
+        box-shadow: 0 8px 32px rgba(140, 38, 31, 0.28);
+        animation: splash-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
         margin-bottom: 24px;
       ">
         <span class="material-symbols-outlined fill" style="
-          font-size: 36px; color: #fff; user-select: none;
+          font-size: 38px; color: #fff; user-select: none;
         ">handyman</span>
       </div>
+
+      <!-- Nombre -->
       <h1 style="
-        margin: 0; font-size: 22px; font-weight: 700;
-        color: #202020; letter-spacing: -0.3px;
-        font-family: 'Work Sans', system-ui, sans-serif;
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1A1210;
+        letter-spacing: -0.4px;
+        font-family: 'Quicksand', 'Inter', sans-serif;
+        animation: splash-fade-in 0.4s ease 0.1s both;
       ">Reparadora de Calzado</h1>
+
+      <!-- Subtítulo -->
       <p style="
-        margin: 6px 0 0; font-size: 13px; font-weight: 500;
-        color: #9a7b6f; letter-spacing: 0.04em;
+        margin: 6px 0 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: #8a7370;
+        letter-spacing: 0.05em;
+        animation: splash-fade-in 0.4s ease 0.2s both;
       ">Taller Artesanal &amp; Tendejón</p>
+
+      <!-- Barra de progreso -->
       <div style="
-        margin-top: 36px; width: 160px; height: 3px;
-        background: rgba(212, 163, 115, 0.25);
-        border-radius: 9999px; overflow: hidden;
+        margin-top: 40px;
+        width: 160px; height: 3px;
+        background: rgba(212, 163, 115, 0.2);
+        border-radius: 9999px;
+        overflow: hidden;
+        animation: splash-fade-in 0.4s ease 0.3s both;
       ">
         <div style="
-          width: 40%; height: 100%;
-          background: linear-gradient(90deg, #8C261F, #C0522A);
+          width: 45%; height: 100%;
+          background: linear-gradient(90deg, #8C261F, #C4973B);
           border-radius: 9999px;
-          animation: splash-bar 1.4s ease-in-out infinite;
+          animation: splash-bar 1.6s ease-in-out infinite;
         "></div>
       </div>
     </div>
