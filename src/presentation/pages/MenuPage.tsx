@@ -73,7 +73,7 @@ export const MenuPage: React.FC = () => {
     <Box>
       <Header
         title=""
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

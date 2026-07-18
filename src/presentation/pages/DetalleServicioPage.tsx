@@ -280,7 +280,7 @@ export const DetalleServicioPage: React.FC = () => {
       <Header
         title="Detalle del Servicio"
         onBack={() => navigate(-1)}
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

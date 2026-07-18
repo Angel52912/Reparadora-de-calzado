@@ -59,7 +59,7 @@ export const HistorialVentasPage: React.FC = () => {
         <Header 
           title="Historial de Ventas" 
           backHref="/tienda-abarrotes" 
-          settingsHref="/ajustes" 
+           
           notificacionesHref="/notificaciones" 
           notificacionesCount={notificacionesCount}
         />

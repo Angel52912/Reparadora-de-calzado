@@ -39,7 +39,7 @@ export const AjustesPage: React.FC = () => {
       <Header
         title="Ajustes"
         onBack={() => navigate(-1)}
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

@@ -231,7 +231,7 @@ export const RegistroServiciosPage: React.FC = () => {
       <Header
         title="Talabarteria"
         backHref="/"
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

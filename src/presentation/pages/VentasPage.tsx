@@ -94,7 +94,7 @@ export const VentasPage: React.FC = () => {
       <Header 
         title="Nueva Venta" 
         backHref="/tienda-abarrotes" 
-        settingsHref="/ajustes" 
+         
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

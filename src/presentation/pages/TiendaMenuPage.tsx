@@ -21,7 +21,7 @@ export const TiendaMenuPage: React.FC = () => {
       <Header 
         title="Tienda de Abarrotes" 
         backHref="/" 
-        settingsHref="/ajustes" 
+         
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

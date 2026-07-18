@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, Chip } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper, Chip, Switch, FormControlLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // @ts-ignore
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -14,9 +14,14 @@ const tiendaRepository = new TiendaRepository();
 export const NotificacionesPage: React.FC = () => {
   const [alertas, setAlertas] = useState<{nombre: string, stock: number}[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notifEnabled, setNotifEnabled] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Load preference
+    const saved = localStorage.getItem('notifEnabled');
+    setNotifEnabled(saved !== 'false');
+
     const checkStock = async () => {
       try {
         const productos = await tiendaRepository.getProductos();
@@ -31,21 +36,36 @@ export const NotificacionesPage: React.FC = () => {
     checkStock();
   }, []);
 
+  const handleToggleNotif = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enabled = event.target.checked;
+    setNotifEnabled(enabled);
+    localStorage.setItem('notifEnabled', String(enabled));
+  };
+
   return (
     <Box className="fade-in">
       <Header
         title="Notificaciones"
         onBack={() => navigate(-1)}
-        settingsHref="/ajustes"
-        notificacionesHref="/notificaciones"
-        notificacionesCount={alertas.length}
+        notificacionesCount={notifEnabled ? alertas.length : 0}
       />
 
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>
+        {/* Toggle de Notificaciones */}
+        <Paper elevation={0} className="card" sx={{ p: 2, mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography sx={{ fontWeight: 600 }}>Notificaciones de inventario</Typography>
+          <FormControlLabel
+            control={<Switch checked={notifEnabled} onChange={handleToggleNotif} color="primary" />}
+            label=""
+          />
+        </Paper>
+
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
             <CircularProgress sx={{ color: COLORS.primary }} />
           </Box>
+        ) : !notifEnabled ? (
+          <Typography sx={{ textAlign: 'center', mt: 4, color: COLORS.inkTertiary }}>Notificaciones desactivadas.</Typography>
         ) : alertas.length === 0 ? (
           /* Estado vacío elegante */
           <Box sx={{ textAlign: 'center', mt: 8, px: 2 }}>

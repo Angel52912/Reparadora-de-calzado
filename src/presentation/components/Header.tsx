@@ -2,7 +2,6 @@ import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Box, Badge } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +10,6 @@ interface HeaderProps {
   backHref?: string;
   onBack?: () => void;
   homeHref?: string;
-  settingsHref?: string;
   notificacionesHref?: string;
   notificacionesCount?: number;
 }
@@ -21,7 +19,6 @@ export const Header: React.FC<HeaderProps> = ({
   backHref,
   onBack,
   homeHref,
-  settingsHref,
   notificacionesHref,
   notificacionesCount = 0,
 }) => {
@@ -51,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
           {backHref || onBack ? (
             <IconButton
               component={backHref ? Link : 'button'}
-              to={backHref}
+              to={backHref!}
               onClick={onBack}
               size="small"
               sx={{
@@ -156,23 +153,6 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <NotificationsIcon sx={{ fontSize: 21 }} />
               </Badge>
-            </IconButton>
-          )}
-          {settingsHref && (
-            <IconButton
-              component={Link}
-              to={settingsHref}
-              size="small"
-              title="Ajustes"
-              sx={{
-                color: '#57423f',
-                width: 36, height: 36,
-                borderRadius: '10px',
-                transition: 'all 0.18s ease',
-                '&:hover': { bgcolor: 'rgba(140,38,31,0.08)', color: '#8C261F' },
-              }}
-            >
-              <SettingsIcon sx={{ fontSize: 21 }} />
             </IconButton>
           )}
         </Box>

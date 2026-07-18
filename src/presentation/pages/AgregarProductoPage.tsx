@@ -109,7 +109,7 @@ export const AgregarProductoPage: React.FC = () => {
       <Header
         title={id ? 'Editar Producto' : 'Agregar Producto'}
         onBack={() => navigate(-1)}
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />

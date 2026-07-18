@@ -175,7 +175,7 @@ export const NuevoServicioPage: React.FC = () => {
       <Header
         title={id ? 'Editar Servicio' : 'Nuevo Servicio'}
         onBack={() => navigate(-1)}
-        settingsHref="/ajustes"
+        
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
       />
