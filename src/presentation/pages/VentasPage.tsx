@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Button, Grid } from '@mui/material';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Box, Typography, CircularProgress, Button, Grid, InputBase, IconButton } from '@mui/material';
+// @ts-ignore
+import SearchIcon from '@mui/icons-material/Search';
 import { Header } from '../components/Header';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -15,6 +17,7 @@ export const VentasPage: React.FC = () => {
   const [carrito, setCarrito] = useState<{producto: Producto, cantidad: number}[]>([]);
   const [loading, setLoading] = useState(true);
   const [notificacionesCount, setNotificacionesCount] = useState(0);
+  const [busqueda, setBusqueda] = useState('');
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -75,6 +78,12 @@ export const VentasPage: React.FC = () => {
 
   const totalVenta = carrito.reduce((acc, item) => acc + (item.producto.precio_venta * item.cantidad), 0);
 
+  const productosFiltrados = useMemo(() => {
+    if (busqueda.trim() === '') return productos;
+    const b = busqueda.toLowerCase();
+    return productos.filter(p => p.nombre?.toLowerCase().includes(b));
+  }, [productos, busqueda]);
+
   const registrarVenta = async () => {
     try {
       await tiendaUseCases.registrarVenta({ total: totalVenta }, carrito);
@@ -103,11 +112,78 @@ export const VentasPage: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
         ) : (
           <Grid container spacing={2}>
-            {/* Sección de Selección */}
+            {/* ── Buscador premium ───────────────────────── */}
             <Grid item xs={12}>
-              <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Seleccionar Productos</Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.75,
+                  px: 1.25,
+                  height: 40,
+                  borderRadius: 9999,
+                  bgcolor: '#FEF9F0',
+                  border: '1.5px solid',
+                  borderColor: busqueda ? COLORS.primary : 'rgba(212,163,115,0.38)',
+                  boxShadow: busqueda
+                    ? '0 0 0 3px rgba(140,38,31,0.10), 0 1px 4px rgba(36,25,23,0.06)'
+                    : '0 1px 4px rgba(36,25,23,0.06)',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                  '&:focus-within': {
+                    borderColor: COLORS.primary,
+                    boxShadow: '0 0 0 3px rgba(140,38,31,0.12), 0 1px 6px rgba(36,25,23,0.08)',
+                  },
+                }}
+              >
+                <SearchIcon
+                  sx={{
+                    fontSize: 17,
+                    color: busqueda ? COLORS.primary : COLORS.inkTertiary,
+                    flexShrink: 0,
+                    transition: 'color 0.2s ease',
+                  }}
+                />
+                <InputBase
+                  placeholder="Buscar producto..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  sx={{
+                    flex: 1,
+                    fontSize: 14,
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    color: COLORS.ink,
+                    '& input': {
+                      p: 0,
+                      '&::placeholder': {
+                        color: COLORS.inkTertiary,
+                        opacity: 1,
+                        fontSize: 14,
+                      },
+                    },
+                  }}
+                />
+                {busqueda && (
+                  <IconButton
+                    size="small"
+                    onClick={() => setBusqueda('')}
+                    sx={{
+                      p: 0.25,
+                      color: COLORS.inkTertiary,
+                      flexShrink: 0,
+                      '&:hover': { color: COLORS.primary, bgcolor: 'transparent' },
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: 15, lineHeight: 1 }}>close</span>
+                  </IconButton>
+                )}
+              </Box>
             </Grid>
-            {productos.map(p => (
+
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ color: COLORS.inkSecondary }}>Seleccionar Productos</Typography>
+            </Grid>
+            {productosFiltrados.map(p => (
               <Grid item xs={12} sm={6} key={p.id_producto}>
                 <Box 
                   className="card" 
@@ -129,8 +205,6 @@ export const VentasPage: React.FC = () => {
                 </Box>
               </Grid>
             ))}
-
-            {/* Carrito */}
             <Grid item xs={12} sx={{ mt: 4 }}>
               <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Carrito</Typography>
               {carrito.map(item => (

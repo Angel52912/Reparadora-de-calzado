@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Box, Typography, Paper, IconButton,
-  Checkbox, Tooltip, Collapse, Button, Fab
+  Checkbox, Tooltip, Collapse, Fab, InputBase
 } from '@mui/material';
+// @ts-ignore
+import SearchIcon from '@mui/icons-material/Search';
 import { COLORS } from '../context/theme';
 // @ts-ignore
 import AddIcon from '@mui/icons-material/Add';
@@ -184,7 +186,8 @@ export const InventarioPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notificacionesCount, setNotificacionesCount] = useState(0);
   const [cambios, setCambios] = useState<Record<number, number>>({});
-  
+  const [busqueda, setBusqueda] = useState('');
+
   const [filtroEstado, setFiltroEstado] = useState<EstadoStock | 'Todos'>('Todos');
   const [modoSeleccion, setModoSeleccion] = useState(false);
   const [seleccionados, setSeleccionados] = useState<Set<number>>(new Set());
@@ -213,9 +216,15 @@ export const InventarioPage: React.FC = () => {
   };
 
   const productosFiltrados = useMemo(() => {
-    if (filtroEstado === 'Todos') return productos;
-    return productos.filter(p => getEstadoProducto(p) === filtroEstado);
-  }, [productos, filtroEstado]);
+    let filtrados = filtroEstado === 'Todos'
+      ? productos
+      : productos.filter(p => getEstadoProducto(p) === filtroEstado);
+    if (busqueda.trim() !== '') {
+      const b = busqueda.toLowerCase();
+      filtrados = filtrados.filter(p => p.nombre?.toLowerCase().includes(b));
+    }
+    return filtrados;
+  }, [productos, filtroEstado, busqueda]);
 
   const updateStockLocal = (id: number, delta: number) => {
     setProductos(prev => prev.map(p => {
@@ -288,53 +297,122 @@ export const InventarioPage: React.FC = () => {
       />
       <Box sx={{ maxWidth: 768, mx: 'auto', px: 2, pt: 1.5, pb: 12 }}>
         
-        {/* ── Barra compacta: filtro + basura ── */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+        {/* ── Barra compacta: filtro + buscador + acciones ── */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
           <FiltroSelector
             value={filtroEstado}
             productos={productos}
             onChange={setFiltroEstado}
           />
 
-          {/* Acciones de selección */}
-          <Collapse in={modoSeleccion} orientation="horizontal">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography sx={{ fontSize: 12, color: COLORS.inkSecondary, px: 0.5 }}>
-                {seleccionados.size} sel.
-              </Typography>
-              <Tooltip title="Cancelar">
-                <IconButton size="small" onClick={cancelarSeleccion} sx={{ color: COLORS.inkTertiary }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Collapse>
-
-          {/* Botón de papelera */}
-          <Tooltip title={modoSeleccion
-            ? seleccionados.size > 0 ? `Eliminar ${seleccionados.size}` : 'Selecciona elementos'
-            : 'Seleccionar para eliminar'
-          }>
-            <span>
+          {/* ── Buscador premium ───────────────────────── */}
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.75,
+              px: 1.25,
+              height: 36,
+              borderRadius: 9999,
+              bgcolor: '#FEF9F0',
+              border: '1.5px solid',
+              borderColor: busqueda ? COLORS.primary : 'rgba(212,163,115,0.38)',
+              boxShadow: busqueda
+                ? '0 0 0 3px rgba(140,38,31,0.10), 0 1px 4px rgba(36,25,23,0.06)'
+                : '0 1px 4px rgba(36,25,23,0.06)',
+              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+              '&:focus-within': {
+                borderColor: COLORS.primary,
+                boxShadow: '0 0 0 3px rgba(140,38,31,0.12), 0 1px 6px rgba(36,25,23,0.08)',
+              },
+            }}
+          >
+            <SearchIcon
+              sx={{
+                fontSize: 16,
+                color: busqueda ? COLORS.primary : COLORS.inkTertiary,
+                flexShrink: 0,
+                transition: 'color 0.2s ease',
+              }}
+            />
+            <InputBase
+              placeholder="Buscar producto..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              sx={{
+                flex: 1,
+                fontSize: 13,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 500,
+                color: COLORS.ink,
+                '& input': {
+                  p: 0,
+                  '&::placeholder': {
+                    color: COLORS.inkTertiary,
+                    opacity: 1,
+                    fontSize: 13,
+                  },
+                },
+              }}
+            />
+            {busqueda && (
               <IconButton
                 size="small"
-                onClick={modoSeleccion ? (seleccionados.size > 0 ? eliminarSeleccionados : undefined) : activarModoSeleccion}
+                onClick={() => setBusqueda('')}
                 sx={{
-                  color: modoSeleccion && seleccionados.size > 0 ? COLORS.error : COLORS.inkSecondary,
-                  opacity: modoSeleccion && seleccionados.size === 0 ? 0.4 : 1,
-                  border: '1px solid',
-                  borderColor: modoSeleccion && seleccionados.size > 0 ? `${COLORS.error}33` : COLORS.border,
-                  borderRadius: 1.5,
-                  p: 0.5,
-                  transition: 'all 0.18s ease',
+                  p: 0.25,
+                  color: COLORS.inkTertiary,
+                  flexShrink: 0,
+                  '&:hover': { color: COLORS.primary, bgcolor: 'transparent' },
                 }}
               >
-                {modoSeleccion
-                  ? <DeleteIcon sx={{ fontSize: 18 }} />
-                  : <DeleteSweepIcon sx={{ fontSize: 18 }} />}
+                <span className="material-symbols-outlined" style={{ fontSize: 14, lineHeight: 1 }}>close</span>
               </IconButton>
-            </span>
-          </Tooltip>
+            )}
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            {/* Acciones de selección */}
+            <Collapse in={modoSeleccion} orientation="horizontal">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Typography sx={{ fontSize: 12, color: COLORS.inkSecondary, px: 0.5 }}>
+                  {seleccionados.size} sel.
+                </Typography>
+                <Tooltip title="Cancelar">
+                  <IconButton size="small" onClick={cancelarSeleccion} sx={{ color: COLORS.inkTertiary }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Collapse>
+
+            {/* Botón de papelera */}
+            <Tooltip title={modoSeleccion
+              ? seleccionados.size > 0 ? `Eliminar ${seleccionados.size}` : 'Selecciona elementos'
+              : 'Seleccionar para eliminar'
+            }>
+              <span>
+                <IconButton
+                  size="small"
+                  onClick={modoSeleccion ? (seleccionados.size > 0 ? eliminarSeleccionados : undefined) : activarModoSeleccion}
+                  sx={{
+                    color: modoSeleccion && seleccionados.size > 0 ? COLORS.error : COLORS.inkSecondary,
+                    opacity: modoSeleccion && seleccionados.size === 0 ? 0.4 : 1,
+                    border: '1px solid',
+                    borderColor: modoSeleccion && seleccionados.size > 0 ? `${COLORS.error}33` : COLORS.border,
+                    borderRadius: 1.5,
+                    p: 0.5,
+                    transition: 'all 0.18s ease',
+                  }}
+                >
+                  {modoSeleccion
+                    ? <DeleteIcon sx={{ fontSize: 18 }} />
+                    : <DeleteSweepIcon sx={{ fontSize: 18 }} />}
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
         </Box>
 
         {/* ── Lista ── */}
@@ -343,10 +421,18 @@ export const InventarioPage: React.FC = () => {
         ) : productosFiltrados.length === 0 ? (
           <EmptyState
             icon="📦"
-            title={filtroEstado === 'Todos' ? 'No hay productos en el inventario' : `Sin productos "${filtroEstado}"`}
-            subtitle={filtroEstado === 'Todos' ? 'Agrega un producto desde el menú de la Tienda.' : 'Prueba otro filtro.'}
-            actionLabel={filtroEstado !== 'Todos' ? 'Ver todos' : undefined}
-            onAction={filtroEstado !== 'Todos' ? () => setFiltroEstado('Todos') : undefined}
+            title={
+              busqueda
+                ? `Sin resultados para "${busqueda}"`
+                : filtroEstado === 'Todos' ? 'No hay productos en el inventario' : `Sin productos "${filtroEstado}"`
+            }
+            subtitle={
+              busqueda
+                ? 'Intenta con otro nombre de producto.'
+                : filtroEstado === 'Todos' ? 'Agrega un producto desde el menú de la Tienda.' : 'Prueba otro filtro.'
+            }
+            actionLabel={busqueda ? 'Limpiar búsqueda' : filtroEstado !== 'Todos' ? 'Ver todos' : undefined}
+            onAction={busqueda ? () => setBusqueda('') : filtroEstado !== 'Todos' ? () => setFiltroEstado('Todos') : undefined}
           />
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
