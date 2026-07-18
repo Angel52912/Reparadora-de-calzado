@@ -209,7 +209,11 @@ export const RegistroServiciosPage: React.FC = () => {
     }
     if (busqueda.trim() !== '') {
       const b = busqueda.toLowerCase();
-      filtrados = filtrados.filter(t => t?.nombre_cliente?.toLowerCase().includes(b));
+      filtrados = filtrados.filter(t => 
+        t?.nombre_cliente?.toLowerCase().includes(b) || 
+        t?.servicio_solicitado?.toLowerCase().includes(b) ||
+        t?.producto?.toLowerCase().includes(b)
+      );
     }
     return filtrados;
   }, [tickets, filtroEstado, busqueda]);
@@ -291,7 +295,7 @@ export const RegistroServiciosPage: React.FC = () => {
               }}
             />
             <InputBase
-              placeholder="Buscar cliente..."
+              placeholder="Buscar cliente, servicio o producto..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               sx={{
