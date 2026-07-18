@@ -271,7 +271,7 @@ export const NuevoServicioPage: React.FC = () => {
 
           <Button
             className="btn-primary"
-            sx={{ mt: 2, py: 1.5, minHeight: 44 }}
+            sx={{ mt: 2, py: 1.5, minHeight: 44, color: '#fff' }}
             onClick={handleSubmit}
             disabled={saving}
             aria-label={id ? 'Actualizar orden de servicio' : 'Registrar nueva orden de servicio'}

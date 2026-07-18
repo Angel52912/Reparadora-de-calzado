@@ -130,7 +130,7 @@ export const VentasPage: React.FC = () => {
               ))}
               <Box sx={{ mt: 2, textAlign: 'right' }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: COLORS.primary, mb: 2 }}>Total: ${totalVenta.toFixed(2)}</Typography>
-                <Button className="btn-primary" sx={{ px: 4, py: 1.5 }} onClick={registrarVenta} disabled={carrito.length === 0}>
+                <Button className="btn-primary" sx={{ px: 4, py: 1.5, color: '#fff' }} onClick={registrarVenta} disabled={carrito.length === 0}>
                   Confirmar Venta
                 </Button>
               </Box>

@@ -28,9 +28,6 @@ export const TiendaMenuPage: React.FC = () => {
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Card to="/tienda-abarrotes/catalogo" icon="menu_book" iconBgColor="#8C261F" iconColor="#fff" title="Catálogo" subtitle="Ver productos" ctaText="Ver" ctaColor="#8C261F" />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <Card to="/tienda-abarrotes/ventas" icon="shopping_cart" iconBgColor="#8C261F" iconColor="#fff" title="Ventas" subtitle="Nueva venta" ctaText="Vender" ctaColor="#8C261F" />
           </Grid>
           <Grid item xs={12} sm={6}>

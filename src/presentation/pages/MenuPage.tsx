@@ -151,48 +151,6 @@ export const MenuPage: React.FC = () => {
             gap: 1.5,
           }}
         >
-          {/* Stat: Productos */}
-          <Box
-            sx={{
-              p: { xs: 2, sm: 2.5 },
-              textAlign: 'center',
-              borderRadius: '16px',
-              background: '#fff',
-              border: '1px solid rgba(212,163,115,0.22)',
-              boxShadow: '0 2px 8px rgba(36,25,23,0.06)',
-              transition: 'all 0.22s ease',
-              '&:hover': {
-                boxShadow: '0 6px 20px rgba(36,25,23,0.10)',
-                transform: 'translateY(-2px)',
-              },
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: { xs: 30, sm: 34 },
-                fontWeight: 800,
-                color: COLORS.primary,
-                letterSpacing: '-1px',
-                lineHeight: 1.1,
-                fontFamily: "'Quicksand', 'Inter', sans-serif",
-              }}
-            >
-              {numSales !== null ? numSales : '—'}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 10,
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                color: COLORS.inkTertiary,
-                mt: 0.5,
-              }}
-            >
-              Productos en tienda
-            </Typography>
-          </Box>
-
           {/* Stat: Servicios activos */}
           <Box
             sx={{
@@ -232,6 +190,48 @@ export const MenuPage: React.FC = () => {
               }}
             >
               Servicios activos
+            </Typography>
+          </Box>
+
+          {/* Stat: Productos */}
+          <Box
+            sx={{
+              p: { xs: 2, sm: 2.5 },
+              textAlign: 'center',
+              borderRadius: '16px',
+              background: '#fff',
+              border: '1px solid rgba(212,163,115,0.22)',
+              boxShadow: '0 2px 8px rgba(36,25,23,0.06)',
+              transition: 'all 0.22s ease',
+              '&:hover': {
+                boxShadow: '0 6px 20px rgba(36,25,23,0.10)',
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: 30, sm: 34 },
+                fontWeight: 800,
+                color: COLORS.primary,
+                letterSpacing: '-1px',
+                lineHeight: 1.1,
+                fontFamily: "'Quicksand', 'Inter', sans-serif",
+              }}
+            >
+              {numSales !== null ? numSales : '—'}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: 10,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: COLORS.inkTertiary,
+                mt: 0.5,
+              }}
+            >
+              Productos en tienda
             </Typography>
           </Box>
         </Box>

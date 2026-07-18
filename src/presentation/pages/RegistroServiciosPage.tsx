@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Box, Typography, Paper, IconButton,
-  Checkbox, Tooltip, Collapse,
+  Checkbox, Tooltip, Collapse, Fab,
 } from '@mui/material';
 import { COLORS } from '../../presentation/context/theme';
 // @ts-ignore
@@ -10,6 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 // @ts-ignore
 import FilterListIcon from '@mui/icons-material/FilterList';
+// @ts-ignore
+import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
@@ -227,9 +229,8 @@ export const RegistroServiciosPage: React.FC = () => {
   return (
     <Box className="fade-in">
       <Header
-        title="Registro de Servicios"
-        backHref="/talabarteria"
-        homeHref="/"
+        title="Talabarteria"
+        backHref="/"
         settingsHref="/ajustes"
         notificacionesHref="/notificaciones"
         notificacionesCount={notificacionesCount}
@@ -360,6 +361,23 @@ export const RegistroServiciosPage: React.FC = () => {
           </Box>
         )}
       </Box>
+
+      {/* FAB para Nuevo Servicio */}
+      <Fab
+        color="primary"
+        aria-label="nuevo servicio"
+        onClick={() => navigate('/talabarteria/nuevo')}
+        sx={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          background: COLORS.primary,
+          boxShadow: '0 4px 12px rgba(140, 38, 31, 0.3)',
+          '&:hover': { background: COLORS.primaryDark },
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Box>
   );
 };
