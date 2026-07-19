@@ -168,8 +168,6 @@ export const NuevoServicioPage: React.FC = () => {
     }
   };
 
-  const helperColor = '#ba1a1a';
-
   return (
     <Box className="fade-in">
       <Header
