@@ -191,7 +191,6 @@ export const NuevoServicioPage: React.FC = () => {
             onChange={handleInputChange}
             error={!!errors.nombre_cliente}
             helperText={errors.nombre_cliente}
-            FormHelperTextProps={{ style: { color: helperColor } }}
             inputProps={{ 'aria-label': 'Nombre del cliente' }}
           />
 
@@ -204,7 +203,6 @@ export const NuevoServicioPage: React.FC = () => {
             onChange={handleInputChange}
             error={!!errors.telefono}
             helperText={errors.telefono || 'Ej. 3310001234 (10 dígitos)'}
-            FormHelperTextProps={{ style: { color: errors.telefono ? helperColor : '#57423f' } }}
             inputProps={{ inputMode: 'numeric', 'aria-label': 'Teléfono de contacto' }}
           />
 
@@ -217,7 +215,6 @@ export const NuevoServicioPage: React.FC = () => {
             onChange={handleInputChange}
             error={!!errors.producto}
             helperText={errors.producto}
-            FormHelperTextProps={{ style: { color: helperColor } }}
             inputProps={{ 'aria-label': 'Tipo de producto a reparar' }}
           />
 
@@ -232,7 +229,6 @@ export const NuevoServicioPage: React.FC = () => {
             onChange={handleInputChange}
             error={!!errors.servicio_solicitado}
             helperText={errors.servicio_solicitado || 'Cuéntanos qué necesita reparación...'}
-            FormHelperTextProps={{ style: { color: errors.servicio_solicitado ? helperColor : '#57423f' } }}
             inputProps={{ 'aria-label': 'Descripción del servicio solicitado' }}
           />
 

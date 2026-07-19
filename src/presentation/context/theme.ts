@@ -179,11 +179,13 @@ export const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 10,
+          borderRadius: 12,
           fontFamily: "'Inter', sans-serif",
           fontSize: 15,
+          backgroundColor: COLORS.surface,
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: COLORS.border,
+            transition: 'border-color 0.2s ease, border-width 0.2s ease',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: COLORS.borderStrong,
@@ -201,9 +203,27 @@ export const theme = createTheme({
           fontFamily: "'Inter', sans-serif",
           fontSize: 14,
           color: COLORS.inkTertiary,
+          padding: '0 2px',
           '&.Mui-focused': {
             color: COLORS.primary,
           },
+          // Asegurar que el fondo del label cubra la línea si el notch falla
+          // y darle un poco más de aire
+          '&.MuiInputLabel-shrink': {
+            backgroundColor: COLORS.surface,
+            padding: '0 6px',
+            marginLeft: '-2px',
+          },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontSize: 12,
+          fontWeight: 500,
+          marginTop: 4,
+          marginLeft: 4,
         },
       },
     },
