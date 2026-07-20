@@ -8,6 +8,7 @@ export const TalabarteriaMenuPage: React.FC = () => {
     <Box className="fade-in">
       <Header title="Talabartería" backHref="/" homeHref="/" />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pt: 2.5 }}>
+        
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Card
@@ -28,7 +29,7 @@ export const TalabarteriaMenuPage: React.FC = () => {
               iconBgColor="#C4973B"
               iconColor="#2B2B2B"
               title="Registro"
-              subtitle="Servicios activos"
+              subtitle="Ver lista completa"
               ctaText="Ver registro"
               ctaColor="#7d562d"
             />
