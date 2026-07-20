@@ -72,8 +72,8 @@ export const AgregarProductoPage: React.FC = () => {
     const precio = parseFloat(formData.precio_venta) || 0;
     const stock  = parseFloat(formData.stock_actual)  || 0;
 
-    if (precio < 0 || stock < 0) {
-      showToast('Los valores numéricos no pueden ser negativos.', 'error');
+    if (precio <= 0 || stock <= 0) {
+      showToast('El precio y el stock deben ser mayores a cero.', 'error');
       return;
     }
 

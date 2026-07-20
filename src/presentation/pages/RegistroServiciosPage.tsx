@@ -17,6 +17,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
+import { usePagination } from '../components/usePagination';
+import { PaginationControls } from '../components/PaginationControls';
 import { useToast } from '../context/ToastContext';
 import { TallerRepository } from '../../infrastructure/repositories/TallerRepository';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
@@ -218,6 +220,13 @@ export const RegistroServiciosPage: React.FC = () => {
     return filtrados;
   }, [tickets, filtroEstado, busqueda]);
 
+  const {
+    paginatedItems,
+    totalPages,
+    currentPage,
+    goToPage
+  } = usePagination(ticketsFiltrados, 4);
+
   const toggleSeleccion = (id: number) => {
     setSeleccionados(prev => {
       const next = new Set(prev);
@@ -380,65 +389,72 @@ export const RegistroServiciosPage: React.FC = () => {
             onAction={filtroEstado !== 'Todos' ? () => setFiltroEstado('Todos') : undefined}
           />
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {ticketsFiltrados.map(t => {
-              const seleccionado = seleccionados.has(t.id_servicio);
-              return (
-                <Paper
-                  key={t.id_servicio}
-                  className="card"
-                  elevation={0}
-                  sx={{
-                    p: 0,
-                    outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none',
-                    transition: 'outline 0.12s ease, box-shadow 0.12s ease',
-                  }}
-                >
-                  <Box
-                    onClick={() =>
-                      modoSeleccion
-                        ? toggleSeleccion(t.id_servicio)
-                        : navigate(`/talabarteria/servicio/${t.id_servicio}`)
-                    }
+          <Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {paginatedItems.map(t => {
+                const seleccionado = seleccionados.has(t.id_servicio);
+                return (
+                  <Paper
+                    key={t.id_servicio}
+                    className="card"
+                    elevation={0}
                     sx={{
-                      px: 1.5, py: 1.25,
-                      display: 'flex', alignItems: 'center', gap: 1.25,
-                      cursor: 'pointer', userSelect: 'none',
+                      p: 0,
+                      outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none',
+                      transition: 'outline 0.12s ease, box-shadow 0.12s ease',
                     }}
                   >
-                    {modoSeleccion && (
-                      <Checkbox
-                        checked={seleccionado}
-                        size="small"
-                        sx={{ p: 0, color: COLORS.primary, '&.Mui-checked': { color: COLORS.primary } }}
-                        onClick={e => { e.stopPropagation(); toggleSeleccion(t.id_servicio); }}
-                      />
-                    )}
+                    <Box
+                      onClick={() =>
+                        modoSeleccion
+                          ? toggleSeleccion(t.id_servicio)
+                          : navigate(`/talabarteria/servicio/${t.id_servicio}`)
+                      }
+                      sx={{
+                        px: 1.5, py: 1.25,
+                        display: 'flex', alignItems: 'center', gap: 1.25,
+                        cursor: 'pointer', userSelect: 'none',
+                      }}
+                    >
+                      {modoSeleccion && (
+                        <Checkbox
+                          checked={seleccionado}
+                          size="small"
+                          sx={{ p: 0, color: COLORS.primary, '&.Mui-checked': { color: COLORS.primary } }}
+                          onClick={e => { e.stopPropagation(); toggleSeleccion(t.id_servicio); }}
+                        />
+                      )}
 
-                    {/* Indicador de estado lateral */}
-                    <Box sx={{
-                      width: 3, alignSelf: 'stretch', borderRadius: 9999,
-                      background: STATUS_STYLE[t.estado].color, flexShrink: 0, minHeight: 32,
-                    }} />
+                      {/* Indicador de estado lateral */}
+                      <Box sx={{
+                        width: 3, alignSelf: 'stretch', borderRadius: 9999,
+                        background: STATUS_STYLE[t.estado].color, flexShrink: 0, minHeight: 32,
+                      }} />
 
-                    {/* Contenido */}
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontWeight: 700, fontSize: 13.5, color: COLORS.ink, lineHeight: 1.3 }} noWrap>
-                        {t.producto}
-                      </Typography>
-                      <Typography sx={{ fontSize: 12, color: COLORS.inkTertiary, lineHeight: 1.3 }} noWrap>
-                        {t.nombre_cliente}
-                        <Box component="span" sx={{ mx: 0.5, opacity: 0.4 }}>·</Box>
-                        {t.servicio_solicitado}
-                      </Typography>
+                      {/* Contenido */}
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography sx={{ fontWeight: 700, fontSize: 13.5, color: COLORS.ink, lineHeight: 1.3 }} noWrap>
+                          {t.producto}
+                        </Typography>
+                        <Typography sx={{ fontSize: 12, color: COLORS.inkTertiary, lineHeight: 1.3 }} noWrap>
+                          {t.nombre_cliente}
+                          <Box component="span" sx={{ mx: 0.5, opacity: 0.4 }}>·</Box>
+                          {t.servicio_solicitado}
+                        </Typography>
+                      </Box>
+
+                      {/* Estado */}
+                      <EstadoChip estado={t.estado} />
                     </Box>
-
-                    {/* Estado */}
-                    <EstadoChip estado={t.estado} />
-                  </Box>
-                </Paper>
-              );
-            })}
+                  </Paper>
+                );
+              })}
+            </Box>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+            />
           </Box>
         )}
       </Box>

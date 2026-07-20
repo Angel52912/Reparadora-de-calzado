@@ -25,6 +25,8 @@ import HistoryIcon from '@mui/icons-material/History';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
+import { usePagination } from '../components/usePagination';
+import { PaginationControls } from '../components/PaginationControls';
 import { useToast } from '../context/ToastContext';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { TiendaUseCases } from '../../useCases/tienda/TiendaUseCases';
@@ -225,6 +227,13 @@ export const InventarioPage: React.FC = () => {
     return filtrados;
   }, [productos, filtroEstado, busqueda]);
 
+  const {
+    paginatedItems,
+    totalPages,
+    currentPage,
+    goToPage
+  } = usePagination(productosFiltrados, 4);
+
   const toggleSeleccion = (id: number) => {
     setSeleccionados(prev => {
       const next = new Set(prev);
@@ -399,72 +408,79 @@ export const InventarioPage: React.FC = () => {
             onAction={busqueda ? () => setBusqueda('') : filtroEstado !== 'Todos' ? () => setFiltroEstado('Todos') : undefined}
           />
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {productosFiltrados.map(p => {
-              const seleccionado = seleccionados.has(p.id_producto);
-              const est = getEstadoProducto(p);
-              const s = STATUS_STYLE[est];
-              return (
-                <Paper
-                  key={p.id_producto}
-                  className="card"
-                  elevation={0}
-                  sx={{
-                    p: 0,
-                    outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none',
-                    transition: 'outline 0.12s ease, box-shadow 0.12s ease',
-                  }}
-                >
-                  <Box
-                    onClick={() =>
-                      modoSeleccion
-                        ? toggleSeleccion(p.id_producto)
-                        : navigate(`/tienda-abarrotes/editar/${p.id_producto}`)
-                    }
+          <Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {paginatedItems.map(p => {
+                const seleccionado = seleccionados.has(p.id_producto);
+                const est = getEstadoProducto(p);
+                const s = STATUS_STYLE[est];
+                return (
+                  <Paper
+                    key={p.id_producto}
+                    className="card"
+                    elevation={0}
                     sx={{
-                      px: 1.5, py: 1.25,
-                      display: 'flex', alignItems: 'center', gap: 1.25,
-                      cursor: 'pointer', userSelect: 'none',
+                      p: 0,
+                      outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none',
+                      transition: 'outline 0.12s ease, box-shadow 0.12s ease',
                     }}
                   >
-                    {modoSeleccion && (
-                      <Checkbox
-                        checked={seleccionado}
-                        size="small"
-                        sx={{ p: 0, color: COLORS.primary, '&.Mui-checked': { color: COLORS.primary } }}
-                        onClick={e => { e.stopPropagation(); toggleSeleccion(p.id_producto); }}
-                      />
-                    )}
+                    <Box
+                      onClick={() =>
+                        modoSeleccion
+                          ? toggleSeleccion(p.id_producto)
+                          : navigate(`/tienda-abarrotes/editar/${p.id_producto}`)
+                      }
+                      sx={{
+                        px: 1.5, py: 1.25,
+                        display: 'flex', alignItems: 'center', gap: 1.25,
+                        cursor: 'pointer', userSelect: 'none',
+                      }}
+                    >
+                      {modoSeleccion && (
+                        <Checkbox
+                          checked={seleccionado}
+                          size="small"
+                          sx={{ p: 0, color: COLORS.primary, '&.Mui-checked': { color: COLORS.primary } }}
+                          onClick={e => { e.stopPropagation(); toggleSeleccion(p.id_producto); }}
+                        />
+                      )}
 
-                    {/* Indicador de estado lateral */}
-                    <Box sx={{
-                      width: 3, alignSelf: 'stretch', borderRadius: 9999,
-                      background: s.color, flexShrink: 0, minHeight: 32,
-                    }} />
+                      {/* Indicador de estado lateral */}
+                      <Box sx={{
+                        width: 3, alignSelf: 'stretch', borderRadius: 9999,
+                        background: s.color, flexShrink: 0, minHeight: 32,
+                      }} />
 
-                    {/* Contenido */}
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontWeight: 700, fontSize: 14.5, color: COLORS.ink, lineHeight: 1.4 }} noWrap>
-                        {p.nombre}
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 2, mt: 0.5 }}>
-                        <Typography sx={{ fontSize: 13, color: COLORS.inkTertiary }}>
-                          Precio: <Box component="span" sx={{ fontWeight: 600, color: COLORS.ink }}>${p.precio_venta.toFixed(2)}</Box>
+                      {/* Contenido */}
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography sx={{ fontWeight: 700, fontSize: 14.5, color: COLORS.ink, lineHeight: 1.4 }} noWrap>
+                          {p.nombre}
                         </Typography>
-                        <Typography sx={{ fontSize: 13, color: COLORS.inkTertiary }}>
-                          Stock: <Box component="span" sx={{ fontWeight: 600, color: p.stock_actual < 5 ? COLORS.error : COLORS.ink }}>{p.stock_actual} pzas.</Box>
-                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 2, mt: 0.5 }}>
+                          <Typography sx={{ fontSize: 13, color: COLORS.inkTertiary }}>
+                            Precio: <Box component="span" sx={{ fontWeight: 600, color: COLORS.ink }}>${p.precio_venta.toFixed(2)}</Box>
+                          </Typography>
+                          <Typography sx={{ fontSize: 13, color: COLORS.inkTertiary }}>
+                            Stock: <Box component="span" sx={{ fontWeight: 600, color: p.stock_actual < 5 ? COLORS.error : COLORS.ink }}>{p.stock_actual} pzas.</Box>
+                          </Typography>
+                        </Box>
                       </Box>
-                    </Box>
 
-                    {/* Acciones e Indicadores */}
-                    {modoSeleccion && (
-                      <StockChip estado={est} />
-                    )}
-                  </Box>
-                </Paper>
-              );
-            })}
+                      {/* Acciones e Indicadores */}
+                      {modoSeleccion && (
+                        <StockChip estado={est} />
+                      )}
+                    </Box>
+                  </Paper>
+                );
+              })}
+            </Box>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+            />
           </Box>
         )}
       </Box>

@@ -132,6 +132,15 @@ export const NuevoServicioPage: React.FC = () => {
       const anticipo   = parseFloat(formData.anticipo)           || 0;
       const total      = manoObra + materiales;
 
+      if (manoObra <= 0 || materiales <= 0) {
+        showToast('El costo de mano de obra y materiales debe ser mayor a cero.', 'error');
+        return;
+      }
+      if (anticipo < 0) {
+        showToast('El anticipo no puede ser negativo.', 'error');
+        return;
+      }
+
       if (id) {
         await tallerUseCases.actualizarTicket(id, {
           nombre_cliente:      formData.nombre_cliente,
