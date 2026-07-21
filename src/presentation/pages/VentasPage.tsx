@@ -200,7 +200,7 @@ export const VentasPage: React.FC = () => {
                     bgcolor: 'white',
                     border: '1px solid',
                     borderColor: 'rgba(212,163,115,0.22)',
-                    borderRadius: 4,
+                    borderRadius: '4px', // Cuadrado moderno (anteriormente era numérico 4, equivalente a 32px)
                     transition: 'all 0.1s ease',
                     '&:hover': { borderColor: COLORS.primary, boxShadow: '0 4px 12px rgba(36,25,23,0.08)' },
                     '&:active': { 
