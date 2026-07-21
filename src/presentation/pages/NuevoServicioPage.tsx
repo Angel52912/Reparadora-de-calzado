@@ -140,6 +140,10 @@ export const NuevoServicioPage: React.FC = () => {
         showToast('El anticipo no puede ser negativo.', 'error');
         return;
       }
+      if (anticipo > total) {
+        showToast('El anticipo no puede ser mayor al costo total (mano de obra + materiales).', 'error');
+        return;
+      }
 
       if (id) {
         await tallerUseCases.actualizarTicket(id, {
