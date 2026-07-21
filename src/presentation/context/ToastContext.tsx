@@ -21,28 +21,28 @@ export const useToast = () => useContext(ToastContext);
 let nextId = 0;
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [toast, setToast] = useState<ToastItem | null>(null);
 
   const showToast = useCallback((message: string, type: ToastType = 'success') => {
     const id = ++nextId;
-    setToasts(prev => [...prev, { id, message, type }]);
+    setToast({ id, message, type });
   }, []);
 
   const removeToast = useCallback((id: number) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToast(prev => (prev?.id === id ? null : prev));
   }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {toasts.map(t => (
+      {toast && (
         <Toast
-          key={t.id}
-          message={t.message}
-          type={t.type}
-          onClose={() => removeToast(t.id)}
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
         />
-      ))}
+      )}
     </ToastContext.Provider>
   );
 };
