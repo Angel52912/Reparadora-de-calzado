@@ -24,7 +24,7 @@ export const VentasPage: React.FC = () => {
     const fetchData = async () => {
       const data = await tiendaUseCases.getProductos();
       setProductos(data);
-      const bajos = data.filter(p => p.stock_actual < 5);
+      const bajos = data.filter((p: Producto) => p.stock_actual < 5);
       setNotificacionesCount(bajos.length);
       setLoading(false);
     };
@@ -37,9 +37,12 @@ export const VentasPage: React.FC = () => {
       return;
     }
 
+    // Haptic feedback inmediato
+    if (navigator.vibrate) navigator.vibrate(50); 
+
     setCarrito(prev => {
       const existing = prev.find(item => item.producto.id_producto === producto.id_producto);
-      
+
       // Si ya existe en el carrito
       if (existing) {
         if (existing.cantidad < producto.stock_actual) {
@@ -52,11 +55,12 @@ export const VentasPage: React.FC = () => {
         showToast('Se alcanzó el límite de existencias.', 'warning');
         return prev;
       }
-      
+
       // Si no existe, agregamos
       return [...prev, { producto, cantidad: 1 }];
     });
   };
+
 
   const removeFromCart = (producto: Producto) => {
     setCarrito(prev => {
@@ -186,7 +190,6 @@ export const VentasPage: React.FC = () => {
             {productosFiltrados.map(p => (
               <Grid item xs={12} sm={6} key={p.id_producto}>
                 <Box 
-                  className="card" 
                   onClick={() => addToCart(p)}
                   sx={{ 
                     p: 2, 
@@ -194,7 +197,16 @@ export const VentasPage: React.FC = () => {
                     justifyContent: 'space-between', 
                     alignItems: 'center',
                     cursor: 'pointer',
-                    '&:hover': { borderColor: COLORS.primary }
+                    bgcolor: 'white',
+                    border: '1px solid',
+                    borderColor: 'rgba(212,163,115,0.22)',
+                    borderRadius: 4,
+                    transition: 'all 0.1s ease',
+                    '&:hover': { borderColor: COLORS.primary, boxShadow: '0 4px 12px rgba(36,25,23,0.08)' },
+                    '&:active': { 
+                      transform: 'scale(0.98)',
+                      backgroundColor: 'rgba(0,0,0,0.05)',
+                    },
                   }}
                 >
                   <Box>
@@ -206,7 +218,27 @@ export const VentasPage: React.FC = () => {
               </Grid>
             ))}
             <Grid item xs={12} sx={{ mt: 4 }}>
-              <Typography variant="h6" sx={{ color: COLORS.inkSecondary, mb: 2 }}>Carrito</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, height: 32 }}>
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: COLORS.inkSecondary,
+                    display: 'inline-block',
+                    minWidth: 60
+                  }}
+                >
+                  Venta
+                </Typography>
+                <span 
+                  className="material-symbols-outlined" 
+                  style={{ 
+                    fontSize: 24, 
+                    color: COLORS.primary,
+                  }}
+                >
+                  shopping_cart
+                </span>
+              </Box>
               {carrito.map(item => (
                 <Box key={item.producto.id_producto} className="card" sx={{ p: 2, mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
                   <Typography sx={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -233,7 +265,29 @@ export const VentasPage: React.FC = () => {
               ))}
               <Box sx={{ mt: 2, textAlign: 'right' }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: COLORS.primary, mb: 2 }}>Total: ${totalVenta.toFixed(2)}</Typography>
-                <Button className="btn-primary" sx={{ px: 4, py: 1.5, color: '#fff' }} onClick={registrarVenta} disabled={carrito.length === 0}>
+                <Button 
+                  variant="contained" 
+                  sx={{ 
+                    px: 4, 
+                    py: 1.5, 
+                    color: '#fff',
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.primaryLight} 100%)`,
+                    borderRadius: 9999,
+                    transition: 'transform 0.15s ease', // Eliminamos transiciones de sombra y fondo
+                    boxShadow: 'none', // Sin sombra por defecto para evitar superposición
+                    '&:hover': {
+                      filter: 'brightness(1.08)',
+                      boxShadow: '0 2px 8px rgba(140,38,31,0.2)', // Sombra muy sutil solo en hover
+                    },
+                    '&:disabled': {
+                      background: '#D4C4C1',
+                      color: '#fff',
+                      boxShadow: 'none',
+                    },
+                  }} 
+                  onClick={registrarVenta} 
+                  disabled={carrito.length === 0}
+                >
                   Confirmar Venta
                 </Button>
               </Box>
