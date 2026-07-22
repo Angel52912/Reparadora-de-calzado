@@ -126,13 +126,12 @@ export const Header: React.FC<HeaderProps> = ({
                 badgeContent={notificacionesCount}
                 sx={{
                   '& .MuiBadge-badge': {
-                    background: 'linear-gradient(135deg, #ba1a1a, #e53935)',
-                    color: '#fff',
+                    background: '#FFC107',
+                    color: '#000',
                     fontSize: 10,
                     fontWeight: 700,
                     minWidth: 18,
                     height: 18,
-                    border: '2px solid rgba(254,249,240,0.9)',
                   },
                 }}
               >

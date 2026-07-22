@@ -22,21 +22,16 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         const page = index + 1;
         const isActive = page === currentPage;
         
-        // ... (resto de la lógica se mantiene igual)
-        const isAccessible = page <= currentPage + 1; 
-
         return (
           <IconButton
             key={page}
-            onClick={() => isAccessible && onPageChange(page)}
-            disabled={!isAccessible}
+            onClick={() => onPageChange(page)}
             sx={{
               width: 32, height: 32,
               borderRadius: '50%',
               bgcolor: isActive ? COLORS.primary : 'transparent',
               color: isActive ? '#fff' : COLORS.inkSecondary,
               border: isActive ? 'none' : `1px solid ${COLORS.border}`,
-              opacity: isAccessible ? 1 : 0.4,
               fontSize: 13,
               fontWeight: 700,
               '&:hover': {
