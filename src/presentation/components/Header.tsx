@@ -67,22 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ArrowBackIcon sx={{ fontSize: 20 }} />
             </IconButton>
-          ) : (
-            /* Logo / ícono cuando estamos en raíz */
-            <Box
-              sx={{
-                width: 36, height: 36, flexShrink: 0,
-                borderRadius: '10px',
-                background: 'linear-gradient(135deg, #8C261F 0%, #C0522A 100%)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(140,38,31,0.28)',
-              }}
-            >
-              <span className="material-symbols-outlined fill" style={{ fontSize: 20, color: '#fff' }}>
-                handyman
-              </span>
-            </Box>
-          )}
+          ) : null}
 
           {title && (
             <Typography

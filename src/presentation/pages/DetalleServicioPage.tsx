@@ -75,64 +75,74 @@ const EstadoStepper = ({
               {/* Nodo del estado */}
               <Tooltip title={activo ? 'Estado actual' : `Cambiar a "${e}"`} arrow>
                 <Box
-                  component="button"
-                  onClick={() => !saving && !activo && onCambiar(e)}
-                  disabled={saving || activo}
+                  component="span"
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     gap: 0.5,
-                    border: 'none',
-                    background: 'none',
-                    cursor: activo ? 'default' : saving ? 'not-allowed' : 'pointer',
-                    p: 0,
-                    flexShrink: 0,
-                    transition: 'opacity 0.18s',
-                    opacity: saving && !activo ? 0.5 : 1,
-                    '&:focus-visible': { outline: `2px solid ${s.color}`, borderRadius: 2 },
                   }}
                 >
-                  {/* Círculo del paso */}
                   <Box
+                    component="button"
+                    onClick={() => !saving && !activo && onCambiar(e)}
+                    disabled={saving || activo}
                     sx={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: '50%',
                       display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      background: activo ? s.color : completado ? s.bg : COLORS.bg,
-                      border: `2.5px solid ${activo ? s.color : completado ? s.color : COLORS.border}`,      
-                      transition: 'all 0.22s ease',
-                      boxShadow: activo ? `0 0 0 4px ${s.color}22` : 'none',
-                      position: 'relative',
+                      gap: 0.5,
+                      border: 'none',
+                      background: 'none',
+                      cursor: activo ? 'default' : saving ? 'not-allowed' : 'pointer',
+                      p: 0,
+                      flexShrink: 0,
+                      transition: 'opacity 0.18s',
+                      opacity: saving && !activo ? 0.5 : 1,
+                      '&:focus-visible': { outline: `2px solid ${s.color}`, borderRadius: 2 },
                     }}
                   >
-                    {saving && activo ? (
-                      <CircularProgress size={18} sx={{ color: '#fff' }} />
-                    ) : completado ? (
-                      <CheckCircleIcon sx={{ fontSize: 22, color: s.color }} />
-                    ) : (
-                      <Typography sx={{ fontSize: 18, lineHeight: 1 }}>{s.emoji}</Typography>
-                    )}
-                  </Box>
+                    {/* Círculo del paso */}
+                    <Box
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: activo ? s.color : completado ? s.bg : COLORS.bg,
+                        border: `2.5px solid ${activo ? s.color : completado ? s.color : COLORS.border}`,      
+                        transition: 'all 0.22s ease',
+                        boxShadow: activo ? `0 0 0 4px ${s.color}22` : 'none',
+                        position: 'relative',
+                      }}
+                    >
+                      {saving && activo ? (
+                        <CircularProgress size={18} sx={{ color: '#fff' }} />
+                      ) : completado ? (
+                        <CheckCircleIcon sx={{ fontSize: 22, color: s.color }} />
+                      ) : (
+                        <Typography sx={{ fontSize: 18, lineHeight: 1 }}>{s.emoji}</Typography>
+                      )}
+                    </Box>
 
-                  {/* Etiqueta */}
-                  <Typography
-                    sx={{
-                      fontSize: 10,
-                      fontWeight: activo ? 800 : 500,
-                      color: activo ? s.color : completado ? s.color : COLORS.inkDisabled,
-                      textAlign: 'center',
-                      whiteSpace: 'nowrap',
-                      letterSpacing: activo ? '0.02em' : 0,
-                      maxWidth: 64,
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {e}
-                  </Typography>
+                    {/* Etiqueta */}
+                    <Typography
+                      sx={{
+                        fontSize: 10,
+                        fontWeight: activo ? 800 : 500,
+                        color: activo ? s.color : completado ? s.color : COLORS.inkDisabled,
+                        textAlign: 'center',
+                        whiteSpace: 'nowrap',
+                        letterSpacing: activo ? '0.02em' : 0,
+                        maxWidth: 64,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {e}
+                    </Typography>
+                  </Box>
                 </Box>
               </Tooltip>
 
@@ -378,7 +388,7 @@ export const DetalleServicioPage: React.FC = () => {
 
         {/* ── Botón editar datos ── */}
         <Button
-          onClick={() => navigate(`/talabarteria/editar/${ticket.id_servicio}`)}
+          onClick={() => navigate(`/editar-servicio/${ticket.id_servicio}`)}
           startIcon={<EditIcon />}
           fullWidth
           sx={{

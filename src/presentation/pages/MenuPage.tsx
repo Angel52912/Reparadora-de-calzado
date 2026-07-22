@@ -1,132 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid } from '@mui/material';
-import { Header } from '../components/Header';
-import { Card } from '../components/Card';
-import { SkeletonCard, EmptyState } from '../components/FeedbackUI';
-import { useToast } from '../context/ToastContext';
+import { Box, Typography, IconButton, Badge } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useSplash } from '../context/SplashContext';
 import { TiendaRepository } from '../../infrastructure/repositories/TiendaRepository';
 import { COLORS } from '../context/theme';
+import { TalabarteriaView } from '../components/TalabarteriaView';
+import { TiendaView } from '../components/TiendaView';
 
 const tiendaRepository = new TiendaRepository();
 
 export const MenuPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeModule = (searchParams.get('module') as 'talabarteria' | 'tienda') || 'talabarteria';
+  
+  const setActiveModule = (module: 'talabarteria' | 'tienda') => {
+    setSearchParams({ module });
+  };
+
   const [notificacionesCount, setNotificacionesCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { showToast } = useToast();
   const { hideSplash } = useSplash();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productos = await tiendaRepository.getProductos();
-        const bajos = productos.filter(p => p.stock_actual < 5);
-        setNotificacionesCount(bajos.length);
-      } catch (err) {
-        const msg = 'Error al cargar los datos. Verifica tu conexión.';
-        setError(msg);
-        showToast(msg, 'error');
-        console.error('[MenuPage] fetchData error:', err);
-      } finally {
-        setLoading(false);
-        hideSplash();
-      }
-    };
-    fetchData();
+    tiendaRepository.getProductos().then(ps => setNotificacionesCount(ps.filter(p => p.stock_actual < 5).length));
+    hideSplash();
   }, []);
 
-  if (loading) {
-    return (
-      <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pt: 10 }}>
-        <SkeletonCard />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <EmptyState
-        icon="⚠️"
-        title="No pudimos cargar los datos"
-        subtitle={error}
-      />
-    );
-  }
+  const barBgColor = activeModule === 'talabarteria' ? COLORS.talabarteriaBrown : COLORS.tiendaRed;
+  const textColor = '#FFFFFF';
 
   return (
-    <Box>
-      <Header
-        title=""
-        
-        notificacionesHref="/notificaciones"
-        notificacionesCount={notificacionesCount}
-      />
-
+    <Box sx={{ pb: 12 }}>
+      {/* Barra de navegación superior fija */}
       <Box
-        className="fade-in"
-        sx={{ maxWidth: 768, mx: 'auto', width: '100%', pb: 12, px: 2 }}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          bgcolor: barBgColor,
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          width: '100%',
+          py: 1.5,
+          transition: 'background-color 0.3s ease',
+        }}
       >
-        {/* ── Saludo / Hero ── */}
-        <Box
-          sx={{
-            textAlign: 'center',
-            py: 5,
-            pb: 4,
+        <Box 
+          className="fade-in-stagger" 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: 3, 
+            px: 2,
+            maxWidth: 768,
+            mx: 'auto'
           }}
         >
-          <Typography
-            component="h2"
-            sx={{
-              fontSize: { xs: 26, sm: 30 },
-              fontWeight: 800,
-              color: COLORS.ink,
-              letterSpacing: '-0.5px',
-              fontFamily: "'Quicksand', 'Inter', sans-serif",
-              mb: 0.75,
-              lineHeight: 1.2,
+          <Typography 
+            onClick={() => setActiveModule('talabarteria')}
+            sx={{ 
+              fontSize: 18, fontWeight: 600, color: activeModule === 'talabarteria' ? textColor : 'rgba(255,255,255,0.7)', 
+              cursor: 'pointer', transition: 'color 0.2s' 
             }}
           >
-            Bienvenido de nuevo
+            Talabartería
           </Typography>
-          <Typography
-            sx={{
-              color: COLORS.inkTertiary,
-              fontSize: 15,
-              fontWeight: 500,
+          <Typography sx={{ mx: 1, color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}>|</Typography>
+          <Typography 
+            onClick={() => setActiveModule('tienda')}
+            sx={{ 
+              fontSize: 18, fontWeight: 600, color: activeModule === 'tienda' ? textColor : 'rgba(255,255,255,0.7)', 
+              cursor: 'pointer', transition: 'color 0.2s' 
             }}
           >
-            ¿A qué sistema desea ingresar?
+            Tienda
           </Typography>
+          <IconButton component={Link} to="/notificaciones" size="small" title="Notificaciones" sx={{ color: textColor, width: 36, height: 36, borderRadius: '10px', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>
+            <Badge badgeContent={notificacionesCount} sx={{ '& .MuiBadge-badge': { background: '#FFC107', color: '#000', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, border: '2px solid white' } }}>
+              <NotificationsIcon sx={{ fontSize: 21 }} />
+            </Badge>
+          </IconButton>
         </Box>
+      </Box>
 
-        {/* ── Tarjetas de módulos ── */}
-        <Grid container spacing={2} sx={{ mb: 3 }} className="fade-in-stagger">
-          <Grid item xs={12} sm={6}>
-            <Card
-              to="/talabarteria"
-              icon="construction"
-              iconBgColor="#C4973B"
-              iconColor="#2B2B2B"
-              title="Talabartería"
-              subtitle="Órdenes & Artesanía"
-              ctaText="Acceder"
-              ctaColor="#7d562d"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Card
-              to="/tienda-abarrotes"
-              icon="shopping_basket"
-              iconBgColor="#8C261F"
-              iconColor="#FFFFFF"
-              title="Tienda de Abarrotes"
-              subtitle="Inventario & Ventas"
-              ctaText="Acceder"
-              ctaColor="#8C261F"
-            />
-          </Grid>
-        </Grid>
+      {/* Contenido principal */}
+      <Box className="fade-in" sx={{ maxWidth: 768, mx: 'auto', width: '100%', pt: 3, px: 2 }}>
+        {activeModule === 'talabarteria' ? <TalabarteriaView /> : <TiendaView />}
       </Box>
     </Box>
   );

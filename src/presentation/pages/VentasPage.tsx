@@ -106,9 +106,9 @@ export const VentasPage: React.FC = () => {
     <Box className="fade-in">
       <Header 
         title="Nueva Venta" 
-        backHref="/tienda-abarrotes" 
-         
-        notificacionesHref="/notificaciones"
+        backHref="/?module=tienda" 
+
+        notificacionesHref="/notificaciones" 
         notificacionesCount={notificacionesCount}
       />
       <Box sx={{ maxWidth: 768, mx: 'auto', p: 2, pb: 10 }}>

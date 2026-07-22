@@ -24,6 +24,10 @@ export const COLORS = {
   inkTertiary: '#8a7370',
   inkDisabled: '#bba9a7',
 
+  talabarteriaBrown: '#7d562d',
+  tiendaRed:         '#8C261F',
+  tiendaVibrant:     '#FF4081',
+
   border:       'rgba(212,163,115,0.28)',
   borderStrong: 'rgba(212,163,115,0.55)',
 
