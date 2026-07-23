@@ -17,11 +17,16 @@
 
 #root {
   width: 100%;
-  max-width: 1126px;
-  margin: 0 auto;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 1126px;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
@@ -39,3 +44,20 @@ h1, h2, h3, h4, h5, h6 {
 p { margin: 0; }
 
 a { color: inherit; }
+
+@keyframes border-fill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.border-animation::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 3px;
+  background: #8C261F;
+  animation: border-fill 2s ease-out forwards;
+  z-index: 1300; /* Ensure it's above other elements */
+}

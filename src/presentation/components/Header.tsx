@@ -24,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <AppBar
+      className="border-animation"
       position="sticky"
       elevation={0}
       sx={{
