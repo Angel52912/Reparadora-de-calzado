@@ -120,9 +120,9 @@ export const TiendaView: React.FC = () => {
   };
 
   const actions = [
-    { icon: <HistoryIcon />, name: 'Historial', action: () => { playGlupSound(); navigate('/historial-ventas'); } },
-    { icon: <ShoppingCartIcon />, name: 'Ventas', action: () => { playGlupSound(); navigate('/ventas'); } },
-    { icon: <AddIcon />, name: 'Añadir', action: () => { playGlupSound(); navigate('/agregar-producto'); } },
+    { icon: <HistoryIcon sx={{ color: '#FFFFFF' }} />, name: 'Historial', action: () => { playGlupSound(); navigate('/historial-ventas'); } },
+    { icon: <ShoppingCartIcon sx={{ color: '#FFFFFF' }} />, name: 'Ventas', action: () => { playGlupSound(); navigate('/ventas'); } },
+    { icon: <AddIcon sx={{ color: '#FFFFFF' }} />, name: 'Añadir', action: () => { playGlupSound(); navigate('/agregar-producto'); } },
   ];
 
   return (

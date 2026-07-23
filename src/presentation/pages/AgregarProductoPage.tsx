@@ -86,7 +86,7 @@ export const AgregarProductoPage: React.FC = () => {
           stock_actual: stock,
         });
         showToast('Producto actualizado con éxito ✓', 'success');
-        navigate('/tienda-abarrotes/inventario');
+        navigate('/?module=tienda');
       } else {
         await tiendaUseCases.agregarProducto({
           nombre:       formData.nombre,
