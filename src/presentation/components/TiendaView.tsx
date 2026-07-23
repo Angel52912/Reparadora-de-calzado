@@ -149,39 +149,45 @@ export const TiendaView: React.FC = () => {
           </Tooltip>
         </Box>
       </Box>
-      {loading ? <SkeletonCard /> : productosFiltrados.length === 0 ? <EmptyState icon="📦" title="Sin productos" /> : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '400px', justifyContent: 'space-between' }}>
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateRows: 'repeat(4, minmax(0, 1fr))', 
-            gap: 1 
-          }}>
-            {paginatedItems.map(p => {
-              const seleccionado = seleccionados.has(p.id_producto);
-              const est = getEstadoProducto(p);
-              const s = STATUS_STYLE[est];
-              return (
-                <Paper key={p.id_producto} elevation={0} sx={{ p: 0, outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none', opacity: est === 'Sin Stock' ? 0.7 : 1 }}>
-                  <Box onClick={() => modoSeleccion ? toggleSeleccion(p.id_producto) : navigate(`/editar-producto/${p.id_producto}`) } sx={{ px: 1.5, py: 1.25, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', height: '100%' }}>
-                    {modoSeleccion && <Checkbox checked={seleccionado} size="small" onClick={e => { e.stopPropagation(); toggleSeleccion(p.id_producto); }} />}
-                    <Box sx={{ width: 4, alignSelf: 'stretch', borderRadius: 9999, background: s.color, flexShrink: 0, minHeight: 32 }} />
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontWeight: 800, fontSize: 14, color: COLORS.ink, textTransform: 'capitalize' }} noWrap>{capitalize(p.nombre)}</Typography>
-                      <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, fontWeight: 600 }}>Precio: ${p.precio_venta.toFixed(2)}</Typography>
-                      <Typography sx={{ fontSize: 12, color: p.stock_actual < 5 ? COLORS.error : COLORS.inkTertiary, fontWeight: 600 }}>
-                        {est === 'Sin Stock' ? 'Agotado' : `Stock: ${p.stock_actual} pzas.`}
-                      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '400px', justifyContent: 'space-between' }}>
+        {loading ? (
+          <SkeletonCard />
+        ) : productosFiltrados.length === 0 ? (
+          <EmptyState icon="📦" title="Sin productos" />
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateRows: 'repeat(4, minmax(0, 1fr))', 
+              gap: 1 
+            }}>
+              {paginatedItems.map(p => {
+                const seleccionado = seleccionados.has(p.id_producto);
+                const est = getEstadoProducto(p);
+                const s = STATUS_STYLE[est];
+                return (
+                  <Paper key={p.id_producto} elevation={0} sx={{ p: 0, outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none', opacity: est === 'Sin Stock' ? 0.7 : 1 }}>
+                    <Box onClick={() => modoSeleccion ? toggleSeleccion(p.id_producto) : navigate(`/editar-producto/${p.id_producto}`) } sx={{ px: 1.5, py: 1.25, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', height: '100%' }}>
+                      {modoSeleccion && <Checkbox checked={seleccionado} size="small" onClick={e => { e.stopPropagation(); toggleSeleccion(p.id_producto); }} />}
+                      <Box sx={{ width: 4, alignSelf: 'stretch', borderRadius: 9999, background: s.color, flexShrink: 0, minHeight: 32 }} />
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography sx={{ fontWeight: 800, fontSize: 14, color: COLORS.ink, textTransform: 'capitalize' }} noWrap>{capitalize(p.nombre)}</Typography>
+                        <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, fontWeight: 600 }}>Precio: ${p.precio_venta.toFixed(2)}</Typography>
+                        <Typography sx={{ fontSize: 12, color: p.stock_actual < 5 ? COLORS.error : COLORS.inkTertiary, fontWeight: 600 }}>
+                          {est === 'Sin Stock' ? 'Agotado' : `Stock: ${p.stock_actual} pzas.`}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </Paper>
-              );
-            })}
+                  </Paper>
+                );
+              })}
+            </Box>
           </Box>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
-          </Box>
+        )}
+        <Box sx={{ mt: 2, mb: 2 }}>
+          <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
         </Box>
-      )}
+      </Box>
       <SpeedDial
         ariaLabel="Acciones tienda"
         sx={{ position: 'fixed', bottom: 24, right: 24, '& .MuiFab-root': { background: COLORS.primary } }}

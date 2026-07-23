@@ -161,36 +161,42 @@ export const TalabarteriaView: React.FC = () => {
         </Box>
       </Box>
 
-      {loading ? <SkeletonCard /> : ticketsFiltrados.length === 0 ? <EmptyState icon="🔧" title="Sin servicios" /> : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '400px', justifyContent: 'space-between' }}>
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateRows: 'repeat(4, minmax(0, 1fr))', 
-            gap: 1 
-          }}>
-            {paginatedItems.map(t => {
-              const seleccionado = seleccionados.has(t.id_servicio);
-              return (
-                <Paper key={t.id_servicio} elevation={0} sx={{ p: 0, outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none' }}>
-                  <Box onClick={() => modoSeleccion ? toggleSeleccion(t.id_servicio) : navigate(`/detalle-servicio/${t.id_servicio}`)} sx={{ px: 1.5, py: 1.25, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', height: '100%' }}>
-                    {modoSeleccion && <Checkbox checked={seleccionado} size="small" onClick={e => { e.stopPropagation(); toggleSeleccion(t.id_servicio); }} />}
-                    <Box sx={{ width: 4, alignSelf: 'stretch', borderRadius: 9999, background: STATUS_STYLE[t.estado].color, flexShrink: 0, minHeight: 32 }} />
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography sx={{ fontWeight: 800, fontSize: 14, color: COLORS.ink, textTransform: 'capitalize' }} noWrap>{t.producto}</Typography>
-                      <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, fontWeight: 700, textTransform: 'capitalize' }} noWrap>{t.nombre_cliente}</Typography>
-                      <Typography sx={{ fontSize: 12, color: COLORS.inkTertiary, textTransform: 'capitalize' }} noWrap>{t.servicio_solicitado}</Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '400px', justifyContent: 'space-between' }}>
+        {loading ? (
+          <SkeletonCard />
+        ) : ticketsFiltrados.length === 0 ? (
+          <EmptyState icon="🔧" title="Sin servicios" />
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateRows: 'repeat(4, minmax(0, 1fr))', 
+              gap: 1 
+            }}>
+              {paginatedItems.map(t => {
+                const seleccionado = seleccionados.has(t.id_servicio);
+                return (
+                  <Paper key={t.id_servicio} elevation={0} sx={{ p: 0, outline: seleccionado ? `2px solid ${COLORS.primary}` : 'none' }}>
+                    <Box onClick={() => modoSeleccion ? toggleSeleccion(t.id_servicio) : navigate(`/detalle-servicio/${t.id_servicio}`)} sx={{ px: 1.5, py: 1.25, display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer', height: '100%' }}>
+                      {modoSeleccion && <Checkbox checked={seleccionado} size="small" onClick={e => { e.stopPropagation(); toggleSeleccion(t.id_servicio); }} />}
+                      <Box sx={{ width: 4, alignSelf: 'stretch', borderRadius: 9999, background: STATUS_STYLE[t.estado].color, flexShrink: 0, minHeight: 32 }} />
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography sx={{ fontWeight: 800, fontSize: 14, color: COLORS.ink, textTransform: 'capitalize' }} noWrap>{t.producto}</Typography>
+                        <Typography sx={{ fontSize: 13, color: COLORS.inkSecondary, fontWeight: 700, textTransform: 'capitalize' }} noWrap>{t.nombre_cliente}</Typography>
+                        <Typography sx={{ fontSize: 12, color: COLORS.inkTertiary, textTransform: 'capitalize' }} noWrap>{t.servicio_solicitado}</Typography>
+                      </Box>
+                      <EstadoChip estado={t.estado} />
                     </Box>
-                    <EstadoChip estado={t.estado} />
-                  </Box>
-                </Paper>
-              );
-            })}
+                  </Paper>
+                );
+              })}
+            </Box>
           </Box>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
-          </Box>
+        )}
+        <Box sx={{ mt: 2, mb: 2 }}>
+          <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
         </Box>
-      )}
+      </Box>
 
       <Fab 
         color="primary" 
