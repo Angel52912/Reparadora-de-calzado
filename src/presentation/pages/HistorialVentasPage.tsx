@@ -59,6 +59,12 @@ export const HistorialVentasPage: React.FC = () => {
               .no-print { display: none !important; }
               .card { border: 1px solid #ccc !important; box-shadow: none !important; }
               body { padding: 20px; }
+              /* Forzar el despliegue del acordeón en impresión */
+              .MuiAccordion-root { border: 1px solid #ccc !important; box-shadow: none !important; }
+              .MuiAccordionSummary-root { display: flex !important; }
+              .MuiAccordionDetails-root { display: block !important; visibility: visible !important; height: auto !important; }
+              .MuiCollapse-root { display: block !important; visibility: visible !important; height: auto !important; }
+              .MuiAccordionSummary-expandIconWrapper { display: none !important; }
             }
           `}
         </style>
